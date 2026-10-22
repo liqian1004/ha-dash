@@ -296,10 +296,10 @@ var o = [
 		icon: "<rect x=\"4\" y=\"3\" width=\"16\" height=\"18\" rx=\"3\"/><circle cx=\"12\" cy=\"14\" r=\"4\"/>"
 	}
 ], s = null, c = (e) => s ? s.getElementById(e) : null, l = null, u = {}, d = "all", f = "all", p = e[0].id, m = "";
-function h() {
+function ee() {
 	return ["all", ...new Set(e.map((e) => e.room))];
 }
-async function g(e, t, n) {
+async function h(e, t, n) {
 	if (!l) return;
 	let { entity_id: r, ...i } = n;
 	try {
@@ -308,25 +308,25 @@ async function g(e, t, n) {
 		console.warn("[ha-dash] 调用失败", e, t, i, n);
 	}
 }
-var ee = [.../* @__PURE__ */ new Set([...e.map((e) => e.id), ...e.flatMap((e) => e.sub || [])])];
-function _() {
+var g = [.../* @__PURE__ */ new Set([...e.map((e) => e.id), ...e.flatMap((e) => e.sub || [])])];
+function te() {
 	let e = "";
-	for (let t of ee) {
+	for (let t of g) {
 		let n = u[t];
 		e += n ? n.state + "|" + (n.last_updated || "") + ";" : "-;";
 	}
 	return e;
 }
-function v(e) {
+function ne(e) {
 	l = e, u = e.states || {};
 }
-function y(e) {
+function _(e) {
 	return u[e] || {
 		state: "unknown",
 		attributes: {}
 	};
 }
-var b = (e) => [
+var v = (e) => [
 	"on",
 	"cool",
 	"heat",
@@ -336,18 +336,18 @@ var b = (e) => [
 	"dry",
 	"open",
 	"unlocked"
-].includes(y(e).state), x = (e) => ["unavailable", "unknown"].includes(y(e).state), S = (e) => String(e).split(".")[0], C = (e) => String(e ?? "").replace(/[&<>"']/g, (e) => ({
+].includes(_(e).state), y = (e) => ["unavailable", "unknown"].includes(_(e).state), b = (e) => String(e).split(".")[0], x = (e) => String(e ?? "").replace(/[&<>"']/g, (e) => ({
 	"&": "&amp;",
 	"<": "&lt;",
 	">": "&gt;",
 	"\"": "&quot;",
 	"'": "&#39;"
 })[e]);
-function w(e, t, n) {
-	let r = y(e).attributes || {};
+function S(e, t, n) {
+	let r = _(e).attributes || {};
 	return r[t] === void 0 || r[t] === null ? n : r[t];
 }
-function te(e) {
+function re(e) {
 	let t = Math.max(1e3, Math.min(4e4, e)) / 100, n, r, i;
 	t <= 66 ? (n = 255, r = 99.4708025861 * Math.log(t) - 161.1195681661) : (n = 329.698727446 * (t - 60) ** -.1332047592, r = 288.1221695283 * (t - 60) ** -.0755148492), i = t >= 66 ? 255 : t <= 19 ? 0 : 138.5177312231 * Math.log(t - 10) - 305.0447927307;
 	let a = (e) => Math.max(0, Math.min(255, Math.round(e)));
@@ -357,7 +357,7 @@ function te(e) {
 		a(i)
 	];
 }
-function ne([e, t]) {
+function C([e, t]) {
 	let n = t / 100 * 1, r = n * (1 - Math.abs(e / 60 % 2 - 1)), i = .5 - n / 2;
 	return (e < 60 ? [
 		n,
@@ -385,7 +385,7 @@ function ne([e, t]) {
 		r
 	]).map((e) => Math.round((e + i) * 255));
 }
-var T = {
+var w = {
 	off: "关闭",
 	cool: "制冷",
 	heat: "制热",
@@ -393,7 +393,7 @@ var T = {
 	auto: "自动",
 	dry: "除湿",
 	fan_only: "送风"
-}, E = {
+}, T = {
 	auto: "自动",
 	low: "低",
 	middle: "中",
@@ -404,19 +404,19 @@ var T = {
 	turbo: "强劲",
 	strong: "强劲",
 	baby: "婴儿"
-}, re = {
+}, ie = {
 	on: "开",
 	off: "关",
 	vertical: "上下",
 	horizontal: "左右",
 	both: "上下+左右"
-}, D = {
+}, E = {
 	auto: "自动",
 	sleep: "睡眠",
 	favorite: "最爱",
 	normal: "标准",
 	none: "无"
-}, O = [
+}, ae = [
 	[
 		255,
 		214,
@@ -458,8 +458,8 @@ var T = {
 		160
 	]
 ];
-function k(e, t) {
-	let n = y(e).state;
+function D(e, t) {
+	let n = _(e).state;
 	return n === "unavailable" ? "离线" : n === "unknown" ? "未知" : t === "climate" ? {
 		cool: "制冷中",
 		heat: "制热中",
@@ -470,110 +470,132 @@ function k(e, t) {
 		off: "已关闭"
 	}[n] || n : t === "lock" ? n === "locked" ? "已上锁" : "已解锁" : n === "on" ? "已开启" : n === "off" ? "已关闭" : n;
 }
-function A() {
+function oe() {
 	let e = c("tabs");
-	e.innerHTML = h().map((e) => `
+	e.innerHTML = ee().map((e) => `
     <button class="tab ${e === f ? "active" : ""}" data-room="${e}">
       ${e === "all" ? "<svg viewBox=\"0 0 24 24\"><rect x=\"3\" y=\"3\" width=\"7\" height=\"7\" rx=\"2\"/><rect x=\"14\" y=\"3\" width=\"7\" height=\"7\" rx=\"2\"/><rect x=\"3\" y=\"14\" width=\"7\" height=\"7\" rx=\"2\"/><rect x=\"14\" y=\"14\" width=\"7\" height=\"7\" rx=\"2\"/></svg>" : "<svg viewBox=\"0 0 24 24\"><path d=\"M3 10.5 12 3l9 7.5\"/><path d=\"M5 9.5V21h14V9.5\"/></svg>"}
       <span>${e === "all" ? "全部房间" : e}</span>
     </button>`).join(""), e.querySelectorAll(".tab").forEach((e) => e.onclick = () => {
-		f = e.dataset.room, m = "", c("q").value = "", M(), X();
+		f = e.dataset.room, m = "", c("q").value = "", P(), X();
 	});
 }
-function ie() {
+var O = "<path d=\"M12 3 3 7.5v9L12 21l9-4.5v-9z\"/><path d=\"m3 7.5 9 4.5 9-4.5\"/><path d=\"M12 12v9\"/>";
+function k() {
 	let e = c("rail-nav");
-	e.style.cssText = "display:flex;flex-direction:column;gap:4px;align-items:center", e.innerHTML = o.map((e) => `
+	e.style.cssText = "display:flex;flex-direction:column;gap:4px;align-items:center", e.innerHTML = `
+    <button class="rail-item ${d === "__floor" ? "active" : ""}" data-cat="__floor" title="3D 户型">
+      <svg viewBox="0 0 24 24">${O}</svg>3DHome
+    </button>
+    <div class="rail-sep"></div>` + o.map((e) => `
     <button class="rail-item ${e.key === d ? "active" : ""}" data-cat="${e.key}">
       <svg viewBox="0 0 24 24">${e.icon}</svg>${e.label}
     </button>`).join(""), e.querySelectorAll("[data-cat]").forEach((e) => e.onclick = () => {
-		d = e.dataset.cat, M(), X();
+		e.dataset.cat === "__floor" ? se() : (M(), d = e.dataset.cat, P(), X());
 	});
 }
-function j() {
-	return e.filter((e) => (d === "all" || e.cat === d) && (f === "all" || e.room === f) && (!m || (e.name + e.room).toLowerCase().includes(m)));
+var A = null, j = !1;
+async function se() {
+	if (j) M();
+	else {
+		if (!A) {
+			let { FloorHome: t } = await import("./chunk-BzBpwBTw.js");
+			A = new t(s.querySelector(".main"), {
+				devices: e,
+				callService: h
+			});
+		}
+		A.el.hidden = !1, j = !0, d = "__floor", A.setHass(l), k();
+	}
 }
 function M() {
-	let e = j()[0];
+	j && (j = !1, A && (A.el.hidden = !0), d === "__floor" && (d = "all"), k());
+}
+function N() {
+	return e.filter((e) => (d === "all" || e.cat === d) && (f === "all" || e.room === f) && (!m || (e.name + e.room).toLowerCase().includes(m)));
+}
+function P() {
+	let e = N()[0];
 	e && (p = e.id);
 }
-var ae = import.meta.url.replace(/[^/]*$/, ""), oe = (e) => `${ae}img/${e}.webp`, se = {
+var ce = import.meta.url.replace(/[^/]*$/, ""), le = (e) => `${ce}img/${e}.webp`, ue = {
 	ac: "<div class=\"flow\"><i></i><i></i><i></i><i></i><i></i></div>",
 	washer: "<div class=\"led\"></div>"
 };
-function N(e) {
-	if (S(e) !== "climate") return "off";
-	let t = y(e).state;
+function F(e) {
+	if (b(e) !== "climate") return "off";
+	let t = _(e).state;
 	return t === "off" || t === "unavailable" ? "off" : t;
 }
-function P(e) {
-	return `<img src="${oe(e)}" alt="" draggable="false" decoding="async">` + (se[e] || "");
+function I(e) {
+	return `<img src="${le(e)}" alt="" draggable="false" decoding="async">` + (ue[e] || "");
 }
-function F() {
-	let e = j(), t = c("grid"), n = e.map((e) => e.id).join("|");
+function L() {
+	let e = N(), t = c("grid"), n = e.map((e) => e.id).join("|");
 	t.dataset.key !== n && (t.innerHTML = e.map((e) => `
       <article class="card" data-id="${e.id}" tabindex="0" role="button">
         <span class="tag"></span>
         <div class="card-name">${e.name}</div>
         <div class="card-sub"><span class="dot"></span><span class="sub-txt"></span></div>
-        <div class="art devart" data-art="${e.art}">${P(e.art)}</div>
+        <div class="art devart" data-art="${e.art}">${I(e.art)}</div>
         <button class="plus" data-plus="${e.id}" aria-label="更多操作">+</button>
-      </article>`).join("") || "<div style=\"color:var(--text-3);font-size:12.5px;padding:20px 2px\">没有匹配的设备</div>", t.dataset.key = n, ce(t));
+      </article>`).join("") || "<div style=\"color:var(--text-3);font-size:12.5px;padding:20px 2px\">没有匹配的设备</div>", t.dataset.key = n, de(t));
 	let r = t.children;
 	e.forEach((e, t) => {
 		let n = r[t];
 		if (!n || n.dataset.id !== e.id) return;
-		let i = x(e.id), a = b(e.id) && !i;
+		let i = y(e.id), a = v(e.id) && !i;
 		n.classList.toggle("on", a), n.classList.toggle("offline", i), n.classList.toggle("selected", e.id === p), n.querySelector(".tag").textContent = i ? "离线" : "已接入", n.querySelector(".sub-txt").textContent = `${e.room} · ${G(e)}`;
 		let o = n.querySelector(".art");
-		o && (o.dataset.hvac = N(e.id)), n.setAttribute("aria-label", `${e.name}，${k(e.id, e.dom)}`);
+		o && (o.dataset.hvac = F(e.id)), n.setAttribute("aria-label", `${e.name}，${D(e.id, e.dom)}`);
 	});
 }
-function ce(e) {
+function de(e) {
 	e.querySelectorAll(".card").forEach((e) => {
 		e.onclick = (t) => {
-			t.target.closest("[data-plus]") || (p = e.dataset.id, L = 0, X(), K(!0));
+			t.target.closest("[data-plus]") || (p = e.dataset.id, z = 0, X(), K(!0));
 		}, e.onkeydown = (t) => {
-			(t.key === "Enter" || t.key === " ") && (t.preventDefault(), p = e.dataset.id, L = 0, X(), K(!0));
+			(t.key === "Enter" || t.key === " ") && (t.preventDefault(), p = e.dataset.id, z = 0, X(), K(!0));
 		};
 	}), e.querySelectorAll("[data-plus]").forEach((e) => {
 		e.onclick = (t) => {
-			t.stopPropagation(), p = e.dataset.plus, L = 0, X(), K(!0);
+			t.stopPropagation(), p = e.dataset.plus, z = 0, X(), K(!0);
 		};
 	});
 }
-function I() {
-	let t = e.filter((e) => !e.demo).length, n = e.filter((e) => !e.demo && x(e.id)).length;
+function R() {
+	let t = e.filter((e) => !e.demo).length, n = e.filter((e) => !e.demo && y(e.id)).length;
 	c("s-total").textContent = t, c("s-online").textContent = t - n, c("s-off").textContent = n;
 	let r = /* @__PURE__ */ new Date(), i = "日一二三四五六"[r.getDay()];
 	c("eyebrow").textContent = `${r.getMonth() + 1}月${r.getDate()}日 周${i} · ${String(r.getHours()).padStart(2, "0")}:${String(r.getMinutes()).padStart(2, "0")}`;
 }
-var L = 0, R = null, z = (e = 1200) => {
-	L = Date.now() + e;
+var z = 0, B = null, V = (e = 1200) => {
+	z = Date.now() + e;
 };
-function B(e, t) {
+function H(e, t) {
 	let n = (e.sub || []).find((e) => String(e).includes(t));
-	return n ? y(n).state : null;
+	return n ? _(n).state : null;
 }
-function V(e, t, n, a) {
+function U(e, t, n, a) {
 	let { domain: o, service: s, labels: c = {} } = a || {}, l = r(e);
 	return `<div class="${t.some((e) => String(e).length > 5) ? "seg grid2" : "seg"}">${t.map((t) => `<button class="${(String(t) === String(n) ? " on" : "").trim()}" data-act="opt" data-entity="${e}" data-domain="${o}"
-              data-service="${s}" data-option="${C(t)}">${C(c[t] || i(t, l))}</button>`).join("")}</div>`;
+              data-service="${s}" data-option="${x(t)}">${x(c[t] || i(t, l))}</button>`).join("")}</div>`;
 }
-function H(e) {
-	let t = y(e).state, n = t === "on" || t === "locked" || t === "open", r = t === "unavailable" ? "离线" : t === "locked" ? "已上锁" : n ? "开" : "关";
+function fe(e) {
+	let t = _(e).state, n = t === "on" || t === "locked" || t === "open", r = t === "unavailable" ? "离线" : t === "locked" ? "已上锁" : n ? "开" : "关";
 	return `<div class="sw-row" data-act="toggle" data-entity="${e}" role="button" tabindex="0">
-    <span class="n">${C(a(e))}</span>
+    <span class="n">${x(a(e))}</span>
     <span style="display:flex;align-items:center;gap:8px">
       <span style="font-size:10.5px;color:var(--text-3)">${r}</span>
       <span class="sw${n ? " on" : ""}"></span>
     </span></div>`;
 }
-function U(e) {
-	let t = y(e), n = t.attributes?.unit_of_measurement || "", r = t.state === "unavailable" || t.state === "unknown" ? "—" : t.state, o = r === "—" ? r : i(r);
-	return `<div class="info-row"><span class="k">${C(a(e))}</span><span class="v">${C(o)}${n && o !== "—" ? " " + C(n) : ""}</span></div>`;
-}
 function W(e) {
-	let t = y(e).attributes || {}, n = t.supported_color_modes || [], r = "";
+	let t = _(e), n = t.attributes?.unit_of_measurement || "", r = t.state === "unavailable" || t.state === "unknown" ? "—" : t.state, o = r === "—" ? r : i(r);
+	return `<div class="info-row"><span class="k">${x(a(e))}</span><span class="v">${x(o)}${n && o !== "—" ? " " + x(n) : ""}</span></div>`;
+}
+function pe(e) {
+	let t = _(e).attributes || {}, n = t.supported_color_modes || [], r = "";
 	if (t.brightness !== void 0 || n.length === 0 || n.some((e) => [
 		"brightness",
 		"color_temp",
@@ -593,7 +615,7 @@ function W(e) {
     </div>`;
 	}
 	if (n.includes("color_temp") || t.color_temp_kelvin != null || t.color_temp != null) {
-		let n = t.min_color_temp_kelvin || (t.min_mireds ? Math.round(1e6 / t.min_mireds) : 2200), i = t.max_color_temp_kelvin || (t.max_mireds ? Math.round(1e6 / t.max_mireds) : 6500), a = t.color_temp_kelvin || (t.color_temp ? Math.round(1e6 / t.color_temp) : Math.round((n + i) / 2)), o = (e) => `rgb(${te(e).join(",")}) ${Math.round((e - n) / Math.max(1, i - n) * 100)}%`;
+		let n = t.min_color_temp_kelvin || (t.min_mireds ? Math.round(1e6 / t.min_mireds) : 2200), i = t.max_color_temp_kelvin || (t.max_mireds ? Math.round(1e6 / t.max_mireds) : 6500), a = t.color_temp_kelvin || (t.color_temp ? Math.round(1e6 / t.color_temp) : Math.round((n + i) / 2)), o = (e) => `rgb(${re(e).join(",")}) ${Math.round((e - n) / Math.max(1, i - n) * 100)}%`;
 		r += `<div class="ctl">
       <div class="ctl-top"><span class="ctl-label">色温</span><span class="ctl-val" id="v-ct">${a}K</span></div>
       <input type="range" min="${n}" max="${i}" step="50" value="${a}"
@@ -609,18 +631,18 @@ function W(e) {
 		"rgbww",
 		"xy"
 	].includes(e))) {
-		let n = t.rgb_color || (t.hs_color ? ne(t.hs_color) : null);
+		let n = t.rgb_color || (t.hs_color ? C(t.hs_color) : null);
 		r += `<div class="ctl">
       <div class="ctl-top"><span class="ctl-label">颜色</span><span class="ctl-val">${n ? "彩色模式" : "—"}</span></div>
-      <div class="swatches">${O.map((t) => `<button class="sw-btn${n && t.every((e, t) => Math.abs(e - n[t]) < 24) ? " on" : ""}" data-act="rgb" data-entity="${e}"
+      <div class="swatches">${ae.map((t) => `<button class="sw-btn${n && t.every((e, t) => Math.abs(e - n[t]) < 24) ? " on" : ""}" data-act="rgb" data-entity="${e}"
                   data-rgb="${t.join(",")}" style="background:rgb(${t.join(",")})"
                   aria-label="颜色 ${t.join(",")}"></button>`).join("")}</div>
     </div>`;
 	}
 	return r;
 }
-function le(e) {
-	let t = y(e).attributes || {}, n = y(e).state, r = t.temperature == null ? 26 : t.temperature, i = t.min_temp == null ? 16 : t.min_temp, a = t.max_temp == null ? 30 : t.max_temp, o = t.target_temp_step || .5, s = `<div class="ctl">
+function me(e) {
+	let t = _(e).attributes || {}, n = _(e).state, r = t.temperature == null ? 26 : t.temperature, i = t.min_temp == null ? 16 : t.min_temp, a = t.max_temp == null ? 30 : t.max_temp, o = t.target_temp_step || .5, s = `<div class="ctl">
     <div class="ctl-top"><span class="ctl-label">目标温度</span><span class="ctl-val">室温 ${t.current_temperature == null ? "—" : `${t.current_temperature}°C`}</span></div>
     <div class="stepper">
       <button data-act="temp" data-entity="${e}" data-delta="-${o}" aria-label="降低温度">−</button>
@@ -632,72 +654,72 @@ function le(e) {
            style="--track:linear-gradient(90deg,#4a7bd0,#8fb0d8,#f2c07a);--thumb:#ffd9a0">
   </div>`;
 	return t.hvac_modes?.length && (s += `<div class="ctl"><div class="ctl-top"><span class="ctl-label">模式</span></div>
-      ${V(e, t.hvac_modes, n, {
+      ${U(e, t.hvac_modes, n, {
 		domain: "climate",
 		service: "set_hvac_mode",
-		labels: T
+		labels: w
 	})}</div>`), t.fan_modes?.length && (s += `<div class="ctl"><div class="ctl-top"><span class="ctl-label">风速</span></div>
-      ${V(e, t.fan_modes, t.fan_mode, {
+      ${U(e, t.fan_modes, t.fan_mode, {
 		domain: "climate",
 		service: "set_fan_mode",
-		labels: E
+		labels: T
 	})}</div>`), t.swing_modes?.length && (s += `<div class="ctl"><div class="ctl-top"><span class="ctl-label">摆风</span></div>
-      ${V(e, t.swing_modes, t.swing_mode, {
+      ${U(e, t.swing_modes, t.swing_mode, {
 		domain: "climate",
 		service: "set_swing_mode",
-		labels: re
+		labels: ie
 	})}</div>`), t.preset_modes?.length && (s += `<div class="ctl"><div class="ctl-top"><span class="ctl-label">预设</span></div>
-      ${V(e, t.preset_modes, t.preset_mode, {
+      ${U(e, t.preset_modes, t.preset_mode, {
 		domain: "climate",
 		service: "set_preset_mode",
-		labels: D
+		labels: E
 	})}</div>`), s;
 }
-function ue(e) {
-	let t = y(e).attributes || {}, n = t.percentage == null ? 0 : t.percentage, r = `<div class="ctl">
+function he(e) {
+	let t = _(e).attributes || {}, n = t.percentage == null ? 0 : t.percentage, r = `<div class="ctl">
     <div class="ctl-top"><span class="ctl-label">风速</span><span class="ctl-val" id="v-fan">${n}%</span></div>
     <input type="range" min="0" max="100" step="${t.percentage_step || 1}" value="${n}"
            data-act="range" data-kind="percentage" data-entity="${e}"
            style="--track:linear-gradient(90deg,#26262b,#3f7a63,#8cf0c4);--thumb:#b6ffe0">
   </div>`;
 	return t.preset_modes?.length && (r += `<div class="ctl"><div class="ctl-top"><span class="ctl-label">模式</span></div>
-      ${V(e, t.preset_modes, t.preset_mode, {
+      ${U(e, t.preset_modes, t.preset_mode, {
 		domain: "fan",
 		service: "set_preset_mode",
-		labels: D
+		labels: E
 	})}</div>`), t.oscillating !== void 0 && (r += `<div class="info"><div class="sw-row" data-act="osc" data-entity="${e}" role="button" tabindex="0">
       <span class="n">摆风 / 摇头</span><span class="sw${t.oscillating ? " on" : ""}"></span></div></div>`), r;
 }
-function de(e) {
-	let t = y(e).attributes || {}, n = t.options || [], o = t.current_option || y(e).state;
-	if (!n.length) return `<div class="info">${U(e)}</div>`;
+function ge(e) {
+	let t = _(e).attributes || {}, n = t.options || [], o = t.current_option || _(e).state;
+	if (!n.length) return `<div class="info">${W(e)}</div>`;
 	let s = r(e);
 	return `<div class="ctl">
-    <div class="ctl-top"><span class="ctl-label">${C(a(e))}</span><span class="ctl-val">${C(i(o, s))}</span></div>
-    ${V(e, n, o, {
+    <div class="ctl-top"><span class="ctl-label">${x(a(e))}</span><span class="ctl-val">${x(i(o, s))}</span></div>
+    ${U(e, n, o, {
 		domain: "select",
 		service: "select_option"
 	})}
   </div>`;
 }
-function fe(e) {
-	let t = e.id, n = S(t), r = "";
-	n === "light" ? r += W(t) : n === "climate" ? r += le(t) : n === "fan" && (r += ue(t));
-	let i = e.sub || [], a = (e) => i.filter((t) => e.includes(S(t))), o = a([
+function _e(e) {
+	let t = e.id, n = b(t), r = "";
+	n === "light" ? r += pe(t) : n === "climate" ? r += me(t) : n === "fan" && (r += he(t));
+	let i = e.sub || [], a = (e) => i.filter((t) => e.includes(b(t))), o = a([
 		"switch",
 		"input_boolean",
 		"lock"
 	]);
-	o.length && (r += `<div class="info">${o.map(H).join("")}</div>`), a(["select"]).forEach((e) => {
-		r += de(e);
+	o.length && (r += `<div class="info">${o.map(fe).join("")}</div>`), a(["select"]).forEach((e) => {
+		r += ge(e);
 	});
 	let s = a(["sensor", "binary_sensor"]);
-	return s.length && (r += `<div class="info">${s.map(U).join("")}</div>`), r || "<div class=\"ctl-empty\">这个设备没有可调参数，只有开 / 关。</div>";
+	return s.length && (r += `<div class="info">${s.map(W).join("")}</div>`), r || "<div class=\"ctl-empty\">这个设备没有可调参数，只有开 / 关。</div>";
 }
 function G(e) {
-	let t = e.id, n = y(t).attributes || {}, r = y(t).state;
+	let t = e.id, n = _(t).attributes || {}, r = _(t).state;
 	if (r === "unavailable" || r === "unknown") return "设备离线";
-	let a = S(t);
+	let a = b(t);
 	if (a === "light") {
 		if (r !== "on") return "当前未开启";
 		let e = [];
@@ -705,19 +727,19 @@ function G(e) {
 	}
 	if (a === "climate") {
 		if (r === "off") return "当前未开启";
-		let e = T[r] || r, t = n.fan_mode ? ` · 风速 ${E[n.fan_mode] || n.fan_mode}` : "";
+		let e = w[r] || r, t = n.fan_mode ? ` · 风速 ${T[n.fan_mode] || n.fan_mode}` : "";
 		return `${n.temperature == null ? "—" : n.temperature + "°C"} · ${e}${t}`;
 	}
 	if (a === "fan") {
 		if (r !== "on") return "当前未开启";
 		let t = [];
 		n.percentage != null && t.push(`风速 ${n.percentage}%`);
-		let i = B(e, "pm2_5");
+		let i = H(e, "pm2_5");
 		return i && i !== "unavailable" && t.push(`PM2.5 ${i}`), t.join(" · ") || "已开启";
 	}
 	if (e.cat === "washer") {
 		if (r !== "on") return "电源未接通";
-		let t = [], n = B(e, "yun_xing_zhuang_tai"), a = B(e, "sheng_yu_shi_jian");
+		let t = [], n = H(e, "yun_xing_zhuang_tai"), a = H(e, "sheng_yu_shi_jian");
 		if (n && n !== "unavailable" && n !== "unknown" && t.push(i(n)), a && a !== "unavailable" && a !== "unknown" && a !== "—") {
 			let e = String(a).match(/\d+(?:\.\d+)?/);
 			e && t.push(`剩余 ${e[0]} 分钟`);
@@ -726,15 +748,15 @@ function G(e) {
 	}
 	if (e.cat === "camera") {
 		if (r !== "on") return "当前未开启";
-		let t = B(e, "recording_mode");
+		let t = H(e, "recording_mode");
 		return t && t !== "unavailable" ? `录像 ${i(t)}` : "监控中";
 	}
 	return r === "on" ? "已开启" : "已关闭";
 }
-function pe(e) {
-	let t = y(e.id).state;
+function ve(e) {
+	let t = _(e.id).state;
 	if (t === "unavailable") return "设备离线";
-	if (S(e.id) === "climate") return t === "off" ? "空调已关闭" : {
+	if (b(e.id) === "climate") return t === "off" ? "空调已关闭" : {
 		cool: "正在制冷",
 		heat: "正在制热",
 		dry: "正在除湿",
@@ -744,27 +766,27 @@ function pe(e) {
 	}[t] || t;
 	if (e.cat === "washer") {
 		if (t !== "on") return "电源已关闭";
-		let n = B(e, "yun_xing_zhuang_tai");
+		let n = H(e, "yun_xing_zhuang_tai");
 		return n && n !== "unavailable" && n !== "unknown" ? n : "待机中";
 	}
 	return e.cat === "purifier" ? t === "on" ? "正在净化" : "当前关闭" : e.cat === "camera" ? t === "on" ? "监控中" : "当前关闭" : t === "on" ? "正在照明" : "当前关闭";
 }
 function K(t) {
-	if (!t && Date.now() < L) {
-		clearTimeout(R), R = setTimeout(() => K(), L - Date.now() + 40);
+	if (!t && Date.now() < z) {
+		clearTimeout(B), B = setTimeout(() => K(), z - Date.now() + 40);
 		return;
 	}
-	let n = e.find((e) => e.id === p) || e[0], r = b(n.id) && !x(n.id);
-	c("d-title").textContent = n.name, c("d-sub").textContent = `${n.room} · ${k(n.id, n.dom)}`;
+	let n = e.find((e) => e.id === p) || e[0], r = v(n.id) && !y(n.id);
+	c("d-title").textContent = n.name, c("d-sub").textContent = `${n.room} · ${D(n.id, n.dom)}`;
 	let i = c("d-art");
-	i.dataset.art = n.art, i.dataset.hvac = N(n.id), i.classList.toggle("lit", r), i.dataset.built !== n.art && (i.innerHTML = P(n.art), i.dataset.built = n.art), c("d-state").textContent = pe(n), c("d-hint").textContent = G(n);
-	let a = S(n.id), o = n.cat === "washer" && String(n.id).includes("dian_yuan"), s = a === "climate" ? "开机" : o ? "通电" : "开启", l = a === "climate" ? "关机" : o ? "断电" : "关闭", u = c("d-on"), d = c("d-off");
-	u.textContent = s, d.textContent = l, u.classList.toggle("primary", !r), d.classList.toggle("primary", r), c("d-controls").innerHTML = fe(n);
+	i.dataset.art = n.art, i.dataset.hvac = F(n.id), i.classList.toggle("lit", r), i.dataset.built !== n.art && (i.innerHTML = I(n.art), i.dataset.built = n.art), c("d-state").textContent = ve(n), c("d-hint").textContent = G(n);
+	let a = b(n.id), o = n.cat === "washer" && String(n.id).includes("dian_yuan"), s = a === "climate" ? "开机" : o ? "通电" : "开启", l = a === "climate" ? "关机" : o ? "断电" : "关闭", u = c("d-on"), d = c("d-off");
+	u.textContent = s, d.textContent = l, u.classList.toggle("primary", !r), d.classList.toggle("primary", r), c("d-controls").innerHTML = _e(n);
 }
 var q = null;
-function me(e) {
-	let t = S(e), n = y(e).state;
-	return t === "lock" ? g("lock", n === "locked" ? "unlock" : "lock", { entity_id: e }) : t === "cover" ? g("cover", n === "open" ? "close_cover" : "open_cover", { entity_id: e }) : g(t, [
+function ye(e) {
+	let t = b(e), n = _(e).state;
+	return t === "lock" ? h("lock", n === "locked" ? "unlock" : "lock", { entity_id: e }) : t === "cover" ? h("cover", n === "open" ? "close_cover" : "open_cover", { entity_id: e }) : h(t, [
 		"on",
 		"cool",
 		"heat",
@@ -775,54 +797,54 @@ function me(e) {
 	].includes(n) ? "turn_off" : "turn_on", { entity_id: e });
 }
 function J(e, t, n) {
-	if (e === "brightness") return g("light", "turn_on", {
+	if (e === "brightness") return h("light", "turn_on", {
 		entity_id: t,
 		brightness_pct: n
 	});
-	if (e === "percentage") return g("fan", "set_percentage", {
+	if (e === "percentage") return h("fan", "set_percentage", {
 		entity_id: t,
 		percentage: n
 	});
-	if (e === "temperature") return g("climate", "set_temperature", {
+	if (e === "temperature") return h("climate", "set_temperature", {
 		entity_id: t,
 		temperature: n
 	});
 	if (e === "color_temp") {
-		let e = y(t).attributes || {};
-		return g("light", "turn_on", {
+		let e = _(t).attributes || {};
+		return h("light", "turn_on", {
 			entity_id: t,
 			...e.color_temp_kelvin != null || e.color_temp == null ? { color_temp_kelvin: n } : { color_temp: Math.round(1e6 / n) }
 		});
 	}
 }
-function he(e) {
+function Y(e) {
 	let t = e.target.closest("[data-act]");
 	if (!t) return;
 	let n = t.dataset.act, r = t.dataset.entity;
 	if (n === "opt") {
 		let e = t.dataset.service, n = t.dataset.domain, i = t.dataset.option, a = { entity_id: r };
-		e === "select_option" ? a.option = i : e === "set_hvac_mode" ? a.hvac_mode = i : e === "set_fan_mode" ? a.fan_mode = i : e === "set_swing_mode" ? a.swing_mode = i : e === "set_preset_mode" && (a.preset_mode = i), z(1200), g(n, e, a);
-	} else if (n === "toggle") z(1200), me(r);
-	else if (n === "osc") z(1200), g("fan", "oscillate", {
+		e === "select_option" ? a.option = i : e === "set_hvac_mode" ? a.hvac_mode = i : e === "set_fan_mode" ? a.fan_mode = i : e === "set_swing_mode" ? a.swing_mode = i : e === "set_preset_mode" && (a.preset_mode = i), V(1200), h(n, e, a);
+	} else if (n === "toggle") V(1200), ye(r);
+	else if (n === "osc") V(1200), h("fan", "oscillate", {
 		entity_id: r,
-		oscillating: !w(r, "oscillating", !1)
+		oscillating: !S(r, "oscillating", !1)
 	});
 	else if (n === "temp") {
-		let e = Number(t.dataset.delta), n = Number(w(r, "temperature", 26)), i = Number(w(r, "min_temp", 16)), a = Number(w(r, "max_temp", 30)), o = Math.round(Math.min(a, Math.max(i, n + e)) * 10) / 10;
-		z(1400);
+		let e = Number(t.dataset.delta), n = Number(S(r, "temperature", 26)), i = Number(S(r, "min_temp", 16)), a = Number(S(r, "max_temp", 30)), o = Math.round(Math.min(a, Math.max(i, n + e)) * 10) / 10;
+		V(1400);
 		let l = c("v-temp");
 		l && (l.innerHTML = `${o}<small>°C</small>`);
 		let u = s.querySelector("#d-controls input[data-kind=\"temperature\"]");
-		u && (u.value = o), g("climate", "set_temperature", {
+		u && (u.value = o), h("climate", "set_temperature", {
 			entity_id: r,
 			temperature: o
 		});
-	} else n === "rgb" && (z(1200), g("light", "turn_on", {
+	} else n === "rgb" && (V(1200), h("light", "turn_on", {
 		entity_id: r,
 		rgb_color: t.dataset.rgb.split(",").map(Number)
 	}));
 }
-function ge(e) {
+function be(e) {
 	let t = e.target;
 	if (t.dataset.act !== "range") return;
 	let n = t.dataset.kind, r = Number(t.value), i = t.dataset.entity, a = {
@@ -838,48 +860,48 @@ function ge(e) {
 		let e = c("v-temp");
 		e && (e.innerHTML = `${r}<small>°C</small>`);
 	}
-	z(1600), clearTimeout(q), q = setTimeout(() => J(n, i, r), 150);
+	V(1600), clearTimeout(q), q = setTimeout(() => J(n, i, r), 150);
 }
-function Y(e) {
+function xe(e) {
 	let t = e.target;
-	t.dataset.act === "range" && (clearTimeout(q), z(1600), J(t.dataset.kind, t.dataset.entity, Number(t.value)));
+	t.dataset.act === "range" && (clearTimeout(q), V(1600), J(t.dataset.kind, t.dataset.entity, Number(t.value)));
 }
 function X() {
-	ie(), A(), F(), I(), K();
+	k(), oe(), L(), R(), K();
 	let e = o.find((e) => e.key === d);
 	c("h1").textContent = f === "all" ? "全部设备" : f;
-	let t = j().length;
-	c("h2").textContent = t + " 个设备" + (d === "all" ? "" : " · " + e.label);
+	let t = N().length;
+	c("h2").textContent = t + " 个设备" + (d === "all" || !e ? "" : " · " + e.label);
 }
-function _e() {
+function Se() {
 	let t = c("q");
 	t && t.addEventListener("input", (e) => {
-		m = e.target.value.trim().toLowerCase(), F();
+		m = e.target.value.trim().toLowerCase(), L();
 	});
 	let n = c("d-on"), r = c("d-off");
 	n && (n.onclick = () => {
 		let t = e.find((e) => e.id === p);
 		if (!t) return;
-		z(1200);
-		let n = S(t.id);
-		if (n === "lock") return g("lock", "unlock", { entity_id: t.id });
-		g(n, "turn_on", { entity_id: t.id });
+		V(1200);
+		let n = b(t.id);
+		if (n === "lock") return h("lock", "unlock", { entity_id: t.id });
+		h(n, "turn_on", { entity_id: t.id });
 	}), r && (r.onclick = () => {
 		let t = e.find((e) => e.id === p);
 		if (!t) return;
-		z(1200);
-		let n = S(t.id);
-		if (n === "lock") return g("lock", "lock", { entity_id: t.id });
-		g(n, "turn_off", { entity_id: t.id });
+		V(1200);
+		let n = b(t.id);
+		if (n === "lock") return h("lock", "lock", { entity_id: t.id });
+		h(n, "turn_off", { entity_id: t.id });
 	});
 	let i = c("d-controls");
-	i && (i.addEventListener("click", he), i.addEventListener("input", ge), i.addEventListener("change", Y), i.addEventListener("keydown", (e) => {
+	i && (i.addEventListener("click", Y), i.addEventListener("input", be), i.addEventListener("change", xe), i.addEventListener("keydown", (e) => {
 		let t = e.target.closest(".sw-row,[data-act=\"osc\"]");
 		t && (e.key === "Enter" || e.key === " ") && (e.preventDefault(), t.click());
 	}));
 }
 var Z = 0;
-function ve(e) {
+function Ce(e) {
 	Z && cancelAnimationFrame(Z), Z = requestAnimationFrame(() => {
 		Z = 0;
 		let t = (e.parentElement || e).getBoundingClientRect(), n = window.innerHeight - Math.max(0, Math.round(t.top));
@@ -888,7 +910,7 @@ function ve(e) {
 }
 var Q = class extends HTMLElement {
 	connectedCallback() {
-		this._mounted || this._mount(), this._onResize = this._onResize || (() => ve(this)), window.addEventListener("resize", this._onResize), this._onResize(), this._fitTimer = setTimeout(this._onResize, 150);
+		this._mounted || this._mount(), this._onResize = this._onResize || (() => Ce(this)), window.addEventListener("resize", this._onResize), this._onResize(), this._fitTimer = setTimeout(this._onResize, 150);
 	}
 	disconnectedCallback() {
 		window.removeEventListener("resize", this._onResize), clearTimeout(this._fitTimer), clearInterval(this._clock);
@@ -896,17 +918,17 @@ var Q = class extends HTMLElement {
 	_mount() {
 		s = this.attachShadow({ mode: "open" });
 		let e = document.createElement("style");
-		e.textContent = ":host{--bg:#08080a;--panel:#141416;--panel-2:#17171a;--card-top:#222226;--card-bottom:#171719;--line:#ffffff0f;--line-2:#ffffff17;--text:#f5f5f7;--text-2:#a5a5ad;--text-3:#6f6f76;--warm:#ffd9a0;--warm-deep:#e8b877;--ok:#4ade80;--r-sm:12px;--r-md:16px;--r-lg:20px;--ease:cubic-bezier(.16,1,.3,1);width:100%;height:100%;display:block;overflow:hidden}*{box-sizing:border-box;margin:0;padding:0}:host{background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;font-family:PingFang SC,HarmonyOS Sans SC,Microsoft YaHei,-apple-system,Segoe UI,sans-serif;overflow:hidden}.app:before{content:\"\";pointer-events:none;z-index:0;filter:blur(30px);background:radial-gradient(60% 100% at 28% 0,#ffc4781a,#0000 70%),radial-gradient(50% 90% at 72% 0,#7896ff12,#0000 72%);height:52vh;position:absolute;top:-20%;bottom:auto;left:-10%;right:-10%}.app{z-index:1;grid-template-columns:72px 1fr;height:100%;display:grid;position:relative}.rail{border-right:1px solid var(--line);flex-direction:column;align-items:center;gap:4px;padding:16px 0;display:flex}.rail-logo{border:1px solid var(--line-2);background:linear-gradient(160deg,#2e2e34,#1b1b1f);border-radius:11px;place-items:center;width:34px;height:34px;margin-bottom:14px;display:grid}.rail-logo svg{width:17px;height:17px;stroke:var(--warm);fill:none;stroke-width:1.7px}.rail-item{width:56px;color:var(--text-3);letter-spacing:.02em;cursor:pointer;transition:.22s var(--ease);background:0 0;border:0;border-radius:12px;flex-direction:column;align-items:center;gap:4px;padding:9px 0 7px;font-size:10px;display:flex}.rail-item svg{stroke:currentColor;fill:none;stroke-width:1.6px;width:19px;height:19px}.rail-item:hover{color:var(--text-2);background:#ffffff0a}.rail-item.active{color:var(--text);background:#ffffff12;box-shadow:inset 0 1px #ffffff0f}.rail-item.active svg{stroke:var(--warm)}.rail-spacer{flex:1}.rail-item.ghost{color:var(--text-3)}.main{grid-template-columns:minmax(0,1fr) 336px;gap:18px;min-height:0;padding:22px 22px 22px 26px;display:grid}.col-left{flex-direction:column;min-height:0;display:flex}.head{flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:24px;display:flex}.head-left{min-width:0}.eyebrow{color:var(--text-3);letter-spacing:.05em;margin-bottom:10px;font-size:11.5px}.h1{letter-spacing:-.025em;font-size:30px;font-weight:700;line-height:1.05}.h2{color:var(--text-2);margin-top:9px;font-size:12.5px}.head-right{align-items:center;gap:10px;display:flex}.search{background:var(--panel);border:1px solid var(--line);min-width:210px;transition:.2s var(--ease);border-radius:12px;align-items:center;gap:8px;padding:9px 13px;display:flex}.search:focus-within{background:#191a1d;border-color:#ffffff2e}.search svg{width:15px;height:15px;stroke:var(--text-3);fill:none;stroke-width:1.8px;flex-shrink:0}.search input{color:var(--text);background:0 0;border:0;outline:0;width:100%;font-family:inherit;font-size:12.5px}.search input::placeholder{color:#5c5c63}.stats{gap:8px;display:flex}.stat{border:1px solid var(--line);background:linear-gradient(165deg,#1b1b1f,#141416);border-radius:13px;min-width:78px;padding:9px 14px}.stat b{font-variant-numeric:tabular-nums;font-size:19px;font-weight:700;line-height:1;display:block}.stat span{color:var(--text-3);margin-top:6px;font-size:10px;display:block}.stat.muted b{color:var(--text-2)}.icon-btn{background:var(--panel);border:1px solid var(--line);cursor:pointer;width:38px;height:38px;color:var(--text-2);transition:.2s var(--ease);border-radius:12px;place-items:center;display:grid}.icon-btn:hover{color:var(--text);border-color:var(--line-2);background:#191a1d}.icon-btn svg{stroke:currentColor;fill:none;stroke-width:1.7px;width:16px;height:16px}.tabs{flex-wrap:wrap;gap:5px;margin:20px 0 16px;display:flex}.tab{color:var(--text-3);cursor:pointer;transition:.2s var(--ease);background:0 0;border:1px solid #0000;border-radius:11px;align-items:center;gap:7px;padding:8px 14px;font-family:inherit;font-size:12.5px;display:flex}.tab svg{stroke:currentColor;fill:none;stroke-width:1.6px;width:15px;height:15px}.tab:hover{color:var(--text-2);background:#ffffff09}.tab.active{color:var(--text);border-color:var(--line-2);background:#ffffff13}.tab.active svg{stroke:var(--warm)}.grid-wrap{flex:1;min-height:0;padding-right:4px;overflow:hidden auto}.grid-wrap::-webkit-scrollbar{width:6px}.grid-wrap::-webkit-scrollbar-thumb{background:#ffffff14;border-radius:99px}.grid{grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:14px;display:grid}.card{cursor:pointer;border:1px solid var(--line);background:linear-gradient(160deg,var(--card-top) 0%,#1b1b1f 55%,var(--card-bottom) 100%);min-height:152px;transition:border-color .25s var(--ease),transform .25s var(--ease),box-shadow .25s var(--ease);border-radius:16px;flex-direction:column;padding:15px 16px;display:flex;position:relative;overflow:hidden}.card:after{content:\"\";pointer-events:none;background:linear-gradient(90deg,#0000,#ffffff24 22% 78%,#0000);height:1px;position:absolute;top:0;bottom:auto;left:0;right:0}.card:hover{border-color:#ffffff24;transform:translateY(-2px);box-shadow:0 14px 34px #00000073}.card.selected{border-color:#ffd9a057;box-shadow:0 0 0 1px #ffd9a024,0 16px 38px #00000080}.card.on{background:radial-gradient(70% 90% at 78% 96%, #ffce8c29, transparent 62%), linear-gradient(160deg,var(--card-top) 0%,#1b1b1f 55%,var(--card-bottom) 100%)}.card-name{letter-spacing:.01em;font-size:14.5px;font-weight:600;line-height:1.3}.card-sub{color:var(--text-3);align-items:center;gap:6px;min-width:0;margin-top:6px;font-size:11px;display:flex}.card-sub .sub-txt{text-overflow:ellipsis;white-space:nowrap;min-width:0;overflow:hidden}.card-sub .dot{background:#4a4a50;border-radius:50%;flex-shrink:0;width:5px;height:5px}.card.on .card-sub .dot{background:var(--ok);box-shadow:0 0 0 3px #4ade8024}.card.offline .card-sub .dot{background:#b4553f}.tag{color:var(--text-3);letter-spacing:.03em;background:#ffffff0b;border:1px solid #ffffff12;border-radius:7px;padding:3px 8px;font-size:10px;position:absolute;top:14px;right:14px}.card.on .tag{color:#c8a06a;background:#ffcd8c12;border-color:#ffcd8c33}.plus{width:28px;height:28px;color:var(--text-2);cursor:pointer;transition:.2s var(--ease);z-index:3;background:#ffffff0d;border:1px solid #ffffff1f;border-radius:50%;place-items:center;font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Noto Sans,Ubuntu,Cantarell,Helvetica Neue;font-size:15px;line-height:1;display:grid;position:absolute;bottom:13px;right:13px}.plus:hover{color:#fff;background:#ffffff21;transform:scale(1.08)}.plus:active{transform:scale(.94)}.devart{position:relative}.devart img{object-fit:contain;z-index:1;mix-blend-mode:screen;opacity:.44;filter:grayscale(.6)brightness(.72);width:100%;height:100%;transition:opacity 1.15s var(--ease),filter 1.15s var(--ease),transform 1.15s var(--ease);will-change:opacity,filter;display:block;position:absolute;top:0;bottom:0;left:0;right:0;transform:scale(.96)translateZ(0)}.on .devart img,.devart.lit img{opacity:1;filter:none;transform:scale(1)}.devart:before{content:\"\";background:radial-gradient(ellipse at 50% 62%,var(--art-glow,#ffd6964d),transparent 68%);opacity:0;transition:opacity 1.15s var(--ease);pointer-events:none;border-radius:50%;position:absolute;top:-14%;bottom:-14%;left:-8%;right:-8%}.on .devart:before,.devart.lit:before{opacity:1}.devart[data-art=ac]{--art-glow:#96cdff42}.devart[data-art=purifier]{--art-glow:#8cffc83d}.devart[data-art=cam]{--art-glow:#ffffff29}.devart[data-art=washer]{--art-glow:#b4cdff38}.devart[data-art=downlight],.devart[data-art=strip]{--art-glow:#ffd6a04d}:is(.on .devart,.devart.lit)[data-art=lamp]:before{animation:3.8s ease-in-out infinite breathe}:is(.on .devart,.devart.lit)[data-art=downlight]:before{animation:3.8s ease-in-out infinite breathe}:is(.on .devart,.devart.lit)[data-art=desk]:before{animation:3.8s ease-in-out infinite breathe}:is(.on .devart,.devart.lit)[data-art=strip]:before{animation:3.8s ease-in-out infinite breathe}@keyframes breathe{0%,to{opacity:.68}50%{opacity:1}}.art{pointer-events:none;width:124px;height:82px;position:absolute;bottom:36px;right:11px}.devart .flow{pointer-events:none;z-index:2;width:104px;height:48px;display:none;position:absolute;top:60%;left:50%;translate:-50%}.on .devart[data-art=ac] .flow,.devart.lit[data-art=ac] .flow{display:block}.flow i{background:radial-gradient(circle,var(--flow-c,#78befff2) 0%,transparent 72%);filter:blur(2.5px);opacity:0;width:12px;height:12px;animation:drift var(--dur,2.8s) var(--ease) infinite;animation-delay:var(--d,0s);border-radius:50%;margin-left:-6px;position:absolute;top:0;left:50%}.flow i:first-child{--x:-32px;--dx:-15px;--d:0s;--dur:2.7s}.flow i:nth-child(2){--x:-11px;--dx:-5px;--d:.45s;--dur:3.1s}.flow i:nth-child(3){--x:7px;--dx:5px;--d:.9s;--dur:2.5s}.flow i:nth-child(4){--x:29px;--dx:17px;--d:1.3s;--dur:2.9s}.flow i:nth-child(5){--x:0px;--dx:0px;--d:1.75s;--dur:3.3s}.devart[data-hvac=cool]{--flow-c:#76bcfff5}.devart[data-hvac=heat]{--flow-c:#ff8258f5}.devart[data-hvac=dry]{--flow-c:#76e8d6e6}.devart[data-hvac=fan_only]{--flow-c:#cddeffdb}.devart[data-hvac=auto],.devart[data-hvac=heat_cool]{--flow-c:#96d6ffeb}.devart[data-hvac=cool] .flow i,.devart[data-hvac=dry] .flow i,.devart[data-hvac=fan_only] .flow i,.devart[data-hvac=auto] .flow i,.devart[data-hvac=heat_cool] .flow i{--dy:46px}.devart[data-hvac=heat] .flow{top:16%}.devart[data-hvac=heat] .flow i{--dy:-42px}@keyframes drift{0%{opacity:0;transform:translate(var(--x,0),0) scale(.5)}16%{opacity:.92}62%{opacity:.5}to{opacity:0;transform:translate(calc(var(--x,0) + var(--dx,0)),var(--dy,44px)) scale(1.9)}}.devart .led{width:9px;height:9px;transition:background 1s var(--ease),box-shadow 1s var(--ease);z-index:2;background:#39414d;border-radius:50%;position:absolute;bottom:1px;right:3px;box-shadow:inset 0 0 3px #0009}.on .devart[data-art=washer] .led,.devart.lit[data-art=washer] .led{background:#5be3a5;animation:2.6s ease-in-out infinite pulse}@keyframes pulse{0%,to{box-shadow:0 0 9px 2px #5be3a573}50%{box-shadow:0 0 16px 4px #5be3a5b8}}.detail{border:1px solid var(--line);background:linear-gradient(172deg,#1b1b1f,#121214);border-radius:20px;flex-direction:column;min-height:0;padding:20px;display:flex;position:relative;overflow:hidden}.detail:before{content:\"\";pointer-events:none;background:radial-gradient(70% 100% at 50% 100%,#ffcd8c0f,#0000 70%);height:42%;position:absolute;top:auto;bottom:0;left:0;right:0}.d-head{justify-content:space-between;align-items:flex-start;gap:10px;display:flex;position:relative}.d-title{letter-spacing:-.01em;font-size:17px;font-weight:650}.d-sub{color:var(--text-3);margin-top:6px;font-size:11.5px}.d-stage{flex:1 0 auto;place-items:center;min-height:176px;display:grid;position:relative}.stage-art{place-items:center;width:224px;height:162px;display:grid;position:relative}.stage-art .flow{width:150px;height:58px;top:62%}.stage-art .flow i{filter:blur(3px);width:15px;height:15px;margin-left:-7.5px}.stage-art[data-hvac=cool] .flow i,.stage-art[data-hvac=dry] .flow i,.stage-art[data-hvac=fan_only] .flow i,.stage-art[data-hvac=auto] .flow i,.stage-art[data-hvac=heat_cool] .flow i{--dy:62px}.stage-art[data-hvac=heat] .flow{top:14%}.stage-art[data-hvac=heat] .flow i{--dy:-56px}.stage-art .led{width:12px;height:12px;bottom:4px;right:6px}.d-state{text-align:center;color:#e9e9ee;font-size:14px;font-weight:600;position:relative}.d-hint{text-align:center;color:var(--text-3);margin-top:9px;font-size:11.5px;line-height:1.75;position:relative}.d-actions{gap:8px;margin-top:16px;display:flex;position:relative}.btn{cursor:pointer;border:1px solid var(--line-2);color:var(--text);transition:.2s var(--ease);background:#ffffff0f;border-radius:12px;flex:1;padding:11px 0;font-family:inherit;font-size:12.5px;font-weight:600}.btn:hover{background:#ffffff1c}.btn.primary{color:#ffe4bb;background:#ffd9a024;border-color:#ffd9a047}.btn.primary:hover{background:#ffd9a038}.slider-row{margin-top:14px;position:relative}.slider-row label{color:var(--text-3);justify-content:space-between;font-size:10.5px;display:flex}input[type=range]{-webkit-appearance:none;background:var(--track,#ffffff1a);cursor:pointer;border-radius:99px;outline:0;width:100%;height:6px;margin-top:9px}input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;background:var(--thumb,var(--warm));cursor:grab;border:1px solid #00000040;border-radius:50%;width:15px;height:15px;box-shadow:0 0 12px #ffd9a073,0 1px 3px #00000080}input[type=range]::-webkit-slider-thumb:active{cursor:grabbing;transform:scale(1.08)}input[type=range]::-moz-range-thumb{background:var(--thumb,var(--warm));border:0;border-radius:50%;width:14px;height:14px;box-shadow:0 0 12px #ffd9a073}.d-body{flex-direction:column;flex:1;min-height:0;padding-right:3px;display:flex;position:relative;overflow:hidden auto}.d-body::-webkit-scrollbar{width:5px}.d-body::-webkit-scrollbar-thumb{background:#ffffff17;border-radius:99px}.ctl{margin-top:15px;position:relative}.ctl-top{justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:2px;display:flex}.ctl-label{color:var(--text-3);letter-spacing:.06em;font-size:10.5px}.ctl-val{color:var(--text);font-variant-numeric:tabular-nums;font-size:11.5px;font-weight:600}.ctl-scale{color:#565660;letter-spacing:.04em;justify-content:space-between;margin-top:5px;font-size:9.5px;display:flex}.seg{flex-wrap:wrap;gap:6px;margin-top:9px;display:flex}.seg button{cursor:pointer;border:1px solid var(--line);min-width:50px;color:var(--text-2);transition:.18s var(--ease);white-space:nowrap;background:#ffffff0b;border-radius:10px;flex:auto;padding:8px 10px;font-family:inherit;font-size:11.5px;font-weight:500}.seg button:hover{color:var(--text);background:#ffffff17}.seg button.on{color:#ffe4bb;background:#ffd9a021;border-color:#ffd9a052}.seg.grid2{grid-template-columns:1fr 1fr;display:grid}.seg.grid2 button{text-overflow:ellipsis;flex:none;min-width:0;overflow:hidden}.stepper{align-items:center;gap:10px;margin-top:6px;display:flex}.stepper button{cursor:pointer;border:1px solid var(--line);width:34px;height:34px;color:var(--text);transition:.18s var(--ease);background:#ffffff0d;border-radius:11px;flex-shrink:0;font-family:inherit;font-size:17px;line-height:1}.stepper button:hover{border-color:var(--line-2);background:#ffffff1c}.stepper button:active{transform:scale(.94)}.stepper .tv{text-align:center;letter-spacing:-.03em;font-variant-numeric:tabular-nums;flex:1;font-size:25px;font-weight:700;line-height:1}.stepper .tv small{color:var(--text-3);margin-left:2px;font-size:11.5px;font-weight:500}.info{border-top:1px solid #ffffff0e;margin-top:15px;padding-top:3px}.info-row{justify-content:space-between;align-items:center;gap:12px;padding:6.5px 0;font-size:11.5px;display:flex}.info-row .k{color:var(--text-3)}.info-row .v{color:var(--text);font-variant-numeric:tabular-nums;text-align:right;font-weight:600}.sw-row{cursor:pointer;-webkit-user-select:none;user-select:none;border-top:1px solid #ffffff0d;justify-content:space-between;align-items:center;gap:12px;padding:10px 0;display:flex}.sw-row:first-child{border-top:0}.sw-row .n{color:var(--text-2);font-size:11.5px}.sw{width:38px;height:21px;transition:.22s var(--ease);background:#ffffff1a;border-radius:99px;flex-shrink:0;position:relative}.sw:after{content:\"\";width:16px;height:16px;transition:.22s var(--ease);background:#8a8a90;border-radius:50%;position:absolute;top:2.5px;left:2.5px}.sw.on{background:#ffd9a052}.sw.on:after{background:#ffe4bb;left:19.5px;box-shadow:0 0 8px #ffd9a099}.swatches{grid-template-columns:repeat(8,1fr);gap:7px;margin-top:11px;display:grid}.sw-btn{aspect-ratio:1;cursor:pointer;transition:.18s var(--ease);border:1px solid #ffffff29;border-radius:50%;padding:0}.sw-btn:hover{border-color:#ffffff73;transform:scale(1.14)}.sw-btn.on{box-shadow:0 0 0 2px #fff9,0 0 12px #ffffff40}.ctl-empty{color:var(--text-3);margin-top:16px;font-size:11.5px;line-height:1.7}.conn{color:var(--text-3);border:1px solid var(--line);z-index:9;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);background:#0000008c;border-radius:99px;align-items:center;gap:7px;padding:6px 14px;font-size:11px;display:flex;position:fixed;bottom:16px;left:50%;transform:translate(-50%)}.conn .dot{background:#b4553f;border-radius:50%;width:6px;height:6px}.conn.live .dot{background:var(--ok);box-shadow:0 0 0 3px #4ade8026}.conn button{color:#8ab4ff;cursor:pointer;font:inherit;background:0 0;border:0;padding:0;text-decoration:underline}@media (max-width:1180px){.main{grid-template-columns:1fr;overflow-y:auto}.detail{min-height:420px}.grid-wrap{overflow:visible}}@media (max-width:720px){.app{grid-template-columns:1fr}.rail{border-right:0;border-bottom:1px solid var(--line);flex-direction:row;padding:8px;overflow-x:auto}.rail-logo,.rail-spacer{display:none}.main{padding:16px}.h1{font-size:24px}}@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}", s.appendChild(e);
+		e.textContent = ":host{--bg:#08080a;--panel:#141416;--panel-2:#17171a;--card-top:#222226;--card-bottom:#171719;--line:#ffffff0f;--line-2:#ffffff17;--text:#f5f5f7;--text-2:#a5a5ad;--text-3:#6f6f76;--warm:#ffd9a0;--warm-deep:#e8b877;--ok:#4ade80;--r-sm:12px;--r-md:16px;--r-lg:20px;--ease:cubic-bezier(.16,1,.3,1);width:100%;height:100%;display:block;overflow:hidden}*{box-sizing:border-box;margin:0;padding:0}:host{background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;font-family:PingFang SC,HarmonyOS Sans SC,Microsoft YaHei,-apple-system,Segoe UI,sans-serif;overflow:hidden}.app:before{content:\"\";pointer-events:none;z-index:0;filter:blur(30px);background:radial-gradient(60% 100% at 28% 0,#ffc4781a,#0000 70%),radial-gradient(50% 90% at 72% 0,#7896ff12,#0000 72%);height:52vh;position:absolute;top:-20%;bottom:auto;left:-10%;right:-10%}.app{z-index:1;grid-template-columns:72px 1fr;height:100%;display:grid;position:relative}.rail{border-right:1px solid var(--line);flex-direction:column;align-items:center;gap:4px;padding:16px 0;display:flex}.rail-logo{border:1px solid var(--line-2);background:linear-gradient(160deg,#2e2e34,#1b1b1f);border-radius:11px;place-items:center;width:34px;height:34px;margin-bottom:14px;display:grid}.rail-logo svg{width:17px;height:17px;stroke:var(--warm);fill:none;stroke-width:1.7px}.rail-item{width:56px;color:var(--text-3);letter-spacing:.02em;cursor:pointer;transition:.22s var(--ease);background:0 0;border:0;border-radius:12px;flex-direction:column;align-items:center;gap:4px;padding:9px 0 7px;font-size:10px;display:flex}.rail-item svg{stroke:currentColor;fill:none;stroke-width:1.6px;width:19px;height:19px}.rail-item:hover{color:var(--text-2);background:#ffffff0a}.rail-item.active{color:var(--text);background:#ffffff12;box-shadow:inset 0 1px #ffffff0f}.rail-item.active svg{stroke:var(--warm)}.rail-spacer{flex:1}.rail-item.ghost{color:var(--text-3)}.rail-sep{background:var(--line-2);width:26px;height:1px;margin:4px 0 6px}.main{grid-template-columns:minmax(0,1fr) 336px;gap:18px;min-height:0;padding:22px 22px 22px 26px;display:grid;position:relative}.col-left{flex-direction:column;min-height:0;display:flex}.head{flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:24px;display:flex}.head-left{min-width:0}.eyebrow{color:var(--text-3);letter-spacing:.05em;margin-bottom:10px;font-size:11.5px}.h1{letter-spacing:-.025em;font-size:30px;font-weight:700;line-height:1.05}.h2{color:var(--text-2);margin-top:9px;font-size:12.5px}.head-right{align-items:center;gap:10px;display:flex}.search{background:var(--panel);border:1px solid var(--line);min-width:210px;transition:.2s var(--ease);border-radius:12px;align-items:center;gap:8px;padding:9px 13px;display:flex}.search:focus-within{background:#191a1d;border-color:#ffffff2e}.search svg{width:15px;height:15px;stroke:var(--text-3);fill:none;stroke-width:1.8px;flex-shrink:0}.search input{color:var(--text);background:0 0;border:0;outline:0;width:100%;font-family:inherit;font-size:12.5px}.search input::placeholder{color:#5c5c63}.stats{gap:8px;display:flex}.stat{border:1px solid var(--line);background:linear-gradient(165deg,#1b1b1f,#141416);border-radius:13px;min-width:78px;padding:9px 14px}.stat b{font-variant-numeric:tabular-nums;font-size:19px;font-weight:700;line-height:1;display:block}.stat span{color:var(--text-3);margin-top:6px;font-size:10px;display:block}.stat.muted b{color:var(--text-2)}.icon-btn{background:var(--panel);border:1px solid var(--line);cursor:pointer;width:38px;height:38px;color:var(--text-2);transition:.2s var(--ease);border-radius:12px;place-items:center;display:grid}.icon-btn:hover{color:var(--text);border-color:var(--line-2);background:#191a1d}.icon-btn svg{stroke:currentColor;fill:none;stroke-width:1.7px;width:16px;height:16px}.tabs{flex-wrap:wrap;gap:5px;margin:20px 0 16px;display:flex}.tab{color:var(--text-3);cursor:pointer;transition:.2s var(--ease);background:0 0;border:1px solid #0000;border-radius:11px;align-items:center;gap:7px;padding:8px 14px;font-family:inherit;font-size:12.5px;display:flex}.tab svg{stroke:currentColor;fill:none;stroke-width:1.6px;width:15px;height:15px}.tab:hover{color:var(--text-2);background:#ffffff09}.tab.active{color:var(--text);border-color:var(--line-2);background:#ffffff13}.tab.active svg{stroke:var(--warm)}.grid-wrap{flex:1;min-height:0;padding-right:4px;overflow:hidden auto}.grid-wrap::-webkit-scrollbar{width:6px}.grid-wrap::-webkit-scrollbar-thumb{background:#ffffff14;border-radius:99px}.grid{grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:14px;display:grid}.card{cursor:pointer;border:1px solid var(--line);background:linear-gradient(160deg,var(--card-top) 0%,#1b1b1f 55%,var(--card-bottom) 100%);min-height:152px;transition:border-color .25s var(--ease),transform .25s var(--ease),box-shadow .25s var(--ease);border-radius:16px;flex-direction:column;padding:15px 16px;display:flex;position:relative;overflow:hidden}.card:after{content:\"\";pointer-events:none;background:linear-gradient(90deg,#0000,#ffffff24 22% 78%,#0000);height:1px;position:absolute;top:0;bottom:auto;left:0;right:0}.card:hover{border-color:#ffffff24;transform:translateY(-2px);box-shadow:0 14px 34px #00000073}.card.selected{border-color:#ffd9a057;box-shadow:0 0 0 1px #ffd9a024,0 16px 38px #00000080}.card.on{background:radial-gradient(70% 90% at 78% 96%, #ffce8c29, transparent 62%), linear-gradient(160deg,var(--card-top) 0%,#1b1b1f 55%,var(--card-bottom) 100%)}.card-name{letter-spacing:.01em;font-size:14.5px;font-weight:600;line-height:1.3}.card-sub{color:var(--text-3);align-items:center;gap:6px;min-width:0;margin-top:6px;font-size:11px;display:flex}.card-sub .sub-txt{text-overflow:ellipsis;white-space:nowrap;min-width:0;overflow:hidden}.card-sub .dot{background:#4a4a50;border-radius:50%;flex-shrink:0;width:5px;height:5px}.card.on .card-sub .dot{background:var(--ok);box-shadow:0 0 0 3px #4ade8024}.card.offline .card-sub .dot{background:#b4553f}.tag{color:var(--text-3);letter-spacing:.03em;background:#ffffff0b;border:1px solid #ffffff12;border-radius:7px;padding:3px 8px;font-size:10px;position:absolute;top:14px;right:14px}.card.on .tag{color:#c8a06a;background:#ffcd8c12;border-color:#ffcd8c33}.plus{width:28px;height:28px;color:var(--text-2);cursor:pointer;transition:.2s var(--ease);z-index:3;background:#ffffff0d;border:1px solid #ffffff1f;border-radius:50%;place-items:center;font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Noto Sans,Ubuntu,Cantarell,Helvetica Neue;font-size:15px;line-height:1;display:grid;position:absolute;bottom:13px;right:13px}.plus:hover{color:#fff;background:#ffffff21;transform:scale(1.08)}.plus:active{transform:scale(.94)}.devart{position:relative}.devart img{object-fit:contain;z-index:1;mix-blend-mode:screen;opacity:.44;filter:grayscale(.6)brightness(.72);width:100%;height:100%;transition:opacity 1.15s var(--ease),filter 1.15s var(--ease),transform 1.15s var(--ease);will-change:opacity,filter;display:block;position:absolute;top:0;bottom:0;left:0;right:0;transform:scale(.96)translateZ(0)}.on .devart img,.devart.lit img{opacity:1;filter:none;transform:scale(1)}.devart:before{content:\"\";background:radial-gradient(ellipse at 50% 62%,var(--art-glow,#ffd6964d),transparent 68%);opacity:0;transition:opacity 1.15s var(--ease);pointer-events:none;border-radius:50%;position:absolute;top:-14%;bottom:-14%;left:-8%;right:-8%}.on .devart:before,.devart.lit:before{opacity:1}.devart[data-art=ac]{--art-glow:#96cdff42}.devart[data-art=purifier]{--art-glow:#8cffc83d}.devart[data-art=cam]{--art-glow:#ffffff29}.devart[data-art=washer]{--art-glow:#b4cdff38}.devart[data-art=downlight],.devart[data-art=strip]{--art-glow:#ffd6a04d}:is(.on .devart,.devart.lit)[data-art=lamp]:before{animation:3.8s ease-in-out infinite breathe}:is(.on .devart,.devart.lit)[data-art=downlight]:before{animation:3.8s ease-in-out infinite breathe}:is(.on .devart,.devart.lit)[data-art=desk]:before{animation:3.8s ease-in-out infinite breathe}:is(.on .devart,.devart.lit)[data-art=strip]:before{animation:3.8s ease-in-out infinite breathe}@keyframes breathe{0%,to{opacity:.68}50%{opacity:1}}.art{pointer-events:none;width:124px;height:82px;position:absolute;bottom:36px;right:11px}.devart .flow{pointer-events:none;z-index:2;width:104px;height:48px;display:none;position:absolute;top:60%;left:50%;translate:-50%}.on .devart[data-art=ac] .flow,.devart.lit[data-art=ac] .flow{display:block}.flow i{background:radial-gradient(circle,var(--flow-c,#78befff2) 0%,transparent 72%);filter:blur(2.5px);opacity:0;width:12px;height:12px;animation:drift var(--dur,2.8s) var(--ease) infinite;animation-delay:var(--d,0s);border-radius:50%;margin-left:-6px;position:absolute;top:0;left:50%}.flow i:first-child{--x:-32px;--dx:-15px;--d:0s;--dur:2.7s}.flow i:nth-child(2){--x:-11px;--dx:-5px;--d:.45s;--dur:3.1s}.flow i:nth-child(3){--x:7px;--dx:5px;--d:.9s;--dur:2.5s}.flow i:nth-child(4){--x:29px;--dx:17px;--d:1.3s;--dur:2.9s}.flow i:nth-child(5){--x:0px;--dx:0px;--d:1.75s;--dur:3.3s}.devart[data-hvac=cool]{--flow-c:#76bcfff5}.devart[data-hvac=heat]{--flow-c:#ff8258f5}.devart[data-hvac=dry]{--flow-c:#76e8d6e6}.devart[data-hvac=fan_only]{--flow-c:#cddeffdb}.devart[data-hvac=auto],.devart[data-hvac=heat_cool]{--flow-c:#96d6ffeb}.devart[data-hvac=cool] .flow i,.devart[data-hvac=dry] .flow i,.devart[data-hvac=fan_only] .flow i,.devart[data-hvac=auto] .flow i,.devart[data-hvac=heat_cool] .flow i{--dy:46px}.devart[data-hvac=heat] .flow{top:16%}.devart[data-hvac=heat] .flow i{--dy:-42px}@keyframes drift{0%{opacity:0;transform:translate(var(--x,0),0) scale(.5)}16%{opacity:.92}62%{opacity:.5}to{opacity:0;transform:translate(calc(var(--x,0) + var(--dx,0)),var(--dy,44px)) scale(1.9)}}.devart .led{width:9px;height:9px;transition:background 1s var(--ease),box-shadow 1s var(--ease);z-index:2;background:#39414d;border-radius:50%;position:absolute;bottom:1px;right:3px;box-shadow:inset 0 0 3px #0009}.on .devart[data-art=washer] .led,.devart.lit[data-art=washer] .led{background:#5be3a5;animation:2.6s ease-in-out infinite pulse}@keyframes pulse{0%,to{box-shadow:0 0 9px 2px #5be3a573}50%{box-shadow:0 0 16px 4px #5be3a5b8}}.detail{border:1px solid var(--line);background:linear-gradient(172deg,#1b1b1f,#121214);border-radius:20px;flex-direction:column;min-height:0;padding:20px;display:flex;position:relative;overflow:hidden}.detail:before{content:\"\";pointer-events:none;background:radial-gradient(70% 100% at 50% 100%,#ffcd8c0f,#0000 70%);height:42%;position:absolute;top:auto;bottom:0;left:0;right:0}.d-head{justify-content:space-between;align-items:flex-start;gap:10px;display:flex;position:relative}.d-title{letter-spacing:-.01em;font-size:17px;font-weight:650}.d-sub{color:var(--text-3);margin-top:6px;font-size:11.5px}.d-stage{flex:1 0 auto;place-items:center;min-height:176px;display:grid;position:relative}.stage-art{place-items:center;width:224px;height:162px;display:grid;position:relative}.stage-art .flow{width:150px;height:58px;top:62%}.stage-art .flow i{filter:blur(3px);width:15px;height:15px;margin-left:-7.5px}.stage-art[data-hvac=cool] .flow i,.stage-art[data-hvac=dry] .flow i,.stage-art[data-hvac=fan_only] .flow i,.stage-art[data-hvac=auto] .flow i,.stage-art[data-hvac=heat_cool] .flow i{--dy:62px}.stage-art[data-hvac=heat] .flow{top:14%}.stage-art[data-hvac=heat] .flow i{--dy:-56px}.stage-art .led{width:12px;height:12px;bottom:4px;right:6px}.d-state{text-align:center;color:#e9e9ee;font-size:14px;font-weight:600;position:relative}.d-hint{text-align:center;color:var(--text-3);margin-top:9px;font-size:11.5px;line-height:1.75;position:relative}.d-actions{gap:8px;margin-top:16px;display:flex;position:relative}.btn{cursor:pointer;border:1px solid var(--line-2);color:var(--text);transition:.2s var(--ease);background:#ffffff0f;border-radius:12px;flex:1;padding:11px 0;font-family:inherit;font-size:12.5px;font-weight:600}.btn:hover{background:#ffffff1c}.btn.primary{color:#ffe4bb;background:#ffd9a024;border-color:#ffd9a047}.btn.primary:hover{background:#ffd9a038}.slider-row{margin-top:14px;position:relative}.slider-row label{color:var(--text-3);justify-content:space-between;font-size:10.5px;display:flex}input[type=range]{-webkit-appearance:none;background:var(--track,#ffffff1a);cursor:pointer;border-radius:99px;outline:0;width:100%;height:6px;margin-top:9px}input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;background:var(--thumb,var(--warm));cursor:grab;border:1px solid #00000040;border-radius:50%;width:15px;height:15px;box-shadow:0 0 12px #ffd9a073,0 1px 3px #00000080}input[type=range]::-webkit-slider-thumb:active{cursor:grabbing;transform:scale(1.08)}input[type=range]::-moz-range-thumb{background:var(--thumb,var(--warm));border:0;border-radius:50%;width:14px;height:14px;box-shadow:0 0 12px #ffd9a073}.d-body{flex-direction:column;flex:1;min-height:0;padding-right:3px;display:flex;position:relative;overflow:hidden auto}.d-body::-webkit-scrollbar{width:5px}.d-body::-webkit-scrollbar-thumb{background:#ffffff17;border-radius:99px}.ctl{margin-top:15px;position:relative}.ctl-top{justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:2px;display:flex}.ctl-label{color:var(--text-3);letter-spacing:.06em;font-size:10.5px}.ctl-val{color:var(--text);font-variant-numeric:tabular-nums;font-size:11.5px;font-weight:600}.ctl-scale{color:#565660;letter-spacing:.04em;justify-content:space-between;margin-top:5px;font-size:9.5px;display:flex}.seg{flex-wrap:wrap;gap:6px;margin-top:9px;display:flex}.seg button{cursor:pointer;border:1px solid var(--line);min-width:50px;color:var(--text-2);transition:.18s var(--ease);white-space:nowrap;background:#ffffff0b;border-radius:10px;flex:auto;padding:8px 10px;font-family:inherit;font-size:11.5px;font-weight:500}.seg button:hover{color:var(--text);background:#ffffff17}.seg button.on{color:#ffe4bb;background:#ffd9a021;border-color:#ffd9a052}.seg.grid2{grid-template-columns:1fr 1fr;display:grid}.seg.grid2 button{text-overflow:ellipsis;flex:none;min-width:0;overflow:hidden}.stepper{align-items:center;gap:10px;margin-top:6px;display:flex}.stepper button{cursor:pointer;border:1px solid var(--line);width:34px;height:34px;color:var(--text);transition:.18s var(--ease);background:#ffffff0d;border-radius:11px;flex-shrink:0;font-family:inherit;font-size:17px;line-height:1}.stepper button:hover{border-color:var(--line-2);background:#ffffff1c}.stepper button:active{transform:scale(.94)}.stepper .tv{text-align:center;letter-spacing:-.03em;font-variant-numeric:tabular-nums;flex:1;font-size:25px;font-weight:700;line-height:1}.stepper .tv small{color:var(--text-3);margin-left:2px;font-size:11.5px;font-weight:500}.info{border-top:1px solid #ffffff0e;margin-top:15px;padding-top:3px}.info-row{justify-content:space-between;align-items:center;gap:12px;padding:6.5px 0;font-size:11.5px;display:flex}.info-row .k{color:var(--text-3)}.info-row .v{color:var(--text);font-variant-numeric:tabular-nums;text-align:right;font-weight:600}.sw-row{cursor:pointer;-webkit-user-select:none;user-select:none;border-top:1px solid #ffffff0d;justify-content:space-between;align-items:center;gap:12px;padding:10px 0;display:flex}.sw-row:first-child{border-top:0}.sw-row .n{color:var(--text-2);font-size:11.5px}.sw{width:38px;height:21px;transition:.22s var(--ease);background:#ffffff1a;border-radius:99px;flex-shrink:0;position:relative}.sw:after{content:\"\";width:16px;height:16px;transition:.22s var(--ease);background:#8a8a90;border-radius:50%;position:absolute;top:2.5px;left:2.5px}.sw.on{background:#ffd9a052}.sw.on:after{background:#ffe4bb;left:19.5px;box-shadow:0 0 8px #ffd9a099}.swatches{grid-template-columns:repeat(8,1fr);gap:7px;margin-top:11px;display:grid}.sw-btn{aspect-ratio:1;cursor:pointer;transition:.18s var(--ease);border:1px solid #ffffff29;border-radius:50%;padding:0}.sw-btn:hover{border-color:#ffffff73;transform:scale(1.14)}.sw-btn.on{box-shadow:0 0 0 2px #fff9,0 0 12px #ffffff40}.ctl-empty{color:var(--text-3);margin-top:16px;font-size:11.5px;line-height:1.7}.conn{color:var(--text-3);border:1px solid var(--line);z-index:9;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);background:#0000008c;border-radius:99px;align-items:center;gap:7px;padding:6px 14px;font-size:11px;display:flex;position:fixed;bottom:16px;left:50%;transform:translate(-50%)}.conn .dot{background:#b4553f;border-radius:50%;width:6px;height:6px}.conn.live .dot{background:var(--ok);box-shadow:0 0 0 3px #4ade8026}.conn button{color:#8ab4ff;cursor:pointer;font:inherit;background:0 0;border:0;padding:0;text-decoration:underline}@media (max-width:1180px){.main{grid-template-columns:1fr;overflow-y:auto}.detail{min-height:420px}.grid-wrap{overflow:visible}}@media (max-width:720px){.app{grid-template-columns:1fr}.rail{border-right:0;border-bottom:1px solid var(--line);flex-direction:row;padding:8px;overflow-x:auto}.rail-logo,.rail-spacer{display:none}.main{padding:16px}.h1{font-size:24px}}@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}", s.appendChild(e);
 		let t = document.createElement("div");
 		for (t.innerHTML = "<div class=\"app\">\n  <!-- ═══ 左侧导航 ═══ -->\n  <aside class=\"rail\" aria-label=\"主导航\">\n    <div class=\"rail-logo\" title=\"Home Assistant\">\n      <svg viewBox=\"0 0 24 24\"><path d=\"M3 10.5 12 3l9 7.5\"/><path d=\"M5 9.5V21h14V9.5\"/></svg>\n    </div>\n    <!-- 左栏：设备分类（按设备类型） -->\n    <div id=\"rail-nav\"></div>\n    <div class=\"rail-spacer\"></div>\n  </aside>\n\n  <!-- ═══ 主区 ═══ -->\n  <div class=\"main\">\n    <div class=\"col-left\">\n      <header class=\"head\">\n        <div class=\"head-left\">\n          <div class=\"eyebrow\" id=\"eyebrow\">—</div>\n          <div class=\"h1\" id=\"h1\">全部设备</div>\n          <div class=\"h2\" id=\"h2\">连接家里的每一个智能设备</div>\n        </div>\n        <div class=\"head-right\">\n          <div class=\"search\">\n            <svg viewBox=\"0 0 24 24\"><circle cx=\"11\" cy=\"11\" r=\"7\"/><path d=\"m20 20-3.2-3.2\"/></svg>\n            <input id=\"q\" type=\"search\" placeholder=\"搜索设备、房间\" aria-label=\"搜索设备\">\n          </div>\n          <div class=\"stats\">\n            <div class=\"stat\"><b id=\"s-total\">0</b><span>全部设备</span></div>\n            <div class=\"stat\"><b id=\"s-online\">0</b><span>在线设备</span></div>\n            <div class=\"stat muted\"><b id=\"s-off\">0</b><span>离线设备</span></div>\n          </div>\n          <button class=\"icon-btn\" title=\"通知\">\n            <svg viewBox=\"0 0 24 24\"><path d=\"M18 8a6 6 0 1 0-12 0c0 7-3 8-3 8h18s-3-1-3-8\"/><path d=\"M13.7 21a2 2 0 0 1-3.4 0\"/></svg>\n          </button>\n        </div>\n      </header>\n\n      <nav class=\"tabs\" id=\"tabs\" aria-label=\"设备分类\"></nav>\n\n      <div class=\"grid-wrap\">\n        <div class=\"grid\" id=\"grid\"></div>\n      </div>\n    </div>\n\n    <!-- ═══ 右侧详情 ═══ -->\n    <aside class=\"detail\" aria-label=\"设备详情\">\n      <div class=\"d-head\">\n        <div>\n          <div class=\"d-title\" id=\"d-title\">客厅灯</div>\n          <div class=\"d-sub\" id=\"d-sub\">客厅 · 已开启</div>\n        </div>\n      </div>\n      <div class=\"d-body\">\n        <div class=\"d-stage\">\n          <div class=\"stage-art devart\" id=\"d-art\" data-art=\"lamp\"></div>\n        </div>\n        <div class=\"d-state\" id=\"d-state\">正在照明</div>\n        <div class=\"d-hint\" id=\"d-hint\">亮度 78%</div>\n        <div class=\"d-actions\">\n          <button class=\"btn\" id=\"d-off\">关闭</button>\n          <button class=\"btn primary\" id=\"d-on\">开启</button>\n        </div>\n        <div id=\"d-controls\"></div>\n      </div>\n    </aside>\n  </div>\n</div>"; t.firstChild;) s.appendChild(t.firstChild);
-		this._mounted = !0, _e(), X(), this._clock = setInterval(() => {
-			this.isConnected && I();
+		this._mounted = !0, Se(), X(), this._clock = setInterval(() => {
+			this.isConnected && R();
 		}, 3e4);
 	}
 	set hass(e) {
 		if (!e || !e.states) return;
-		v(e);
-		let t = _();
+		ne(e), A && j && A.setHass(e);
+		let t = te();
 		t !== this._sig && (this._sig = t, !this._raf && (this._raf = requestAnimationFrame(() => {
 			this._raf = 0, this._mounted && X();
 		})));
