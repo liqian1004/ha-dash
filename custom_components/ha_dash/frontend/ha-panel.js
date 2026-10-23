@@ -107,6 +107,42 @@ var e = [
 		cat: "lights",
 		dom: "light",
 		demo: !0
+	},
+	{
+		id: "light.demo_ceiling",
+		name: "筒灯",
+		room: "客厅",
+		art: "downlight",
+		cat: "lights",
+		dom: "light",
+		demo: !0
+	},
+	{
+		id: "switch.demo_fridge",
+		name: "冰箱",
+		room: "厨房",
+		art: "fridge",
+		cat: "appliance",
+		dom: "switch",
+		demo: !0
+	},
+	{
+		id: "media_player.demo_tv",
+		name: "电视",
+		room: "客厅",
+		art: "tv",
+		cat: "media",
+		dom: "switch",
+		demo: !0
+	},
+	{
+		id: "media_player.demo_speaker",
+		name: "音箱",
+		room: "客厅",
+		art: "speaker",
+		cat: "media",
+		dom: "switch",
+		demo: !0
 	}
 ], t = {
 	"switch.xiaomi_cn_858349871_h09h00_eco_p_2_7": "ECO 节能",
@@ -499,7 +535,7 @@ async function se() {
 	if (j) M();
 	else {
 		if (!A) {
-			let { FloorHome: t } = await import("./chunk-BUWOfJFQ.js");
+			let { FloorHome: t } = await import("./chunk-pS2FofLL.js");
 			A = new t(s.querySelector(".main"), {
 				devices: e,
 				callService: h
