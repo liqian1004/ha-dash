@@ -535,7 +535,7 @@ async function se() {
 	if (j) M();
 	else {
 		if (!A) {
-			let { FloorHome: t } = await import("./chunk-DCcJIa4T.js");
+			let { FloorHome: t } = await import("./chunk-DjgeO0K-.js");
 			A = new t(s.querySelector(".main"), {
 				devices: e,
 				callService: h
