@@ -141,7 +141,8 @@ function callService (domain, service, serviceData = {}, target = {}) {
 }
 
 // 每次变化都换一个新对象：面板用 shallowRef 监听引用，换引用才会重渲染
-function push () { el.hass = { states, callService } }
+// callWS 也要给：摄像头画面靠 auth/sign_path 签名，不然 <img> 拿不到流
+function push () { el.hass = { states, callService, callWS: send } }
 
 /* ── 3. WebSocket 协议（手写，不引依赖）──────────────────────── */
 function send (msg) {
