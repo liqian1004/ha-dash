@@ -597,7 +597,7 @@ async function pe() {
 	if (P) F();
 	else {
 		if (!N) {
-			let { FloorHome: e } = await import("./chunk-tdoUdsIA.js");
+			let { FloorHome: e } = await import("./chunk-D1Ft6SLk.js");
 			N = new e(f.querySelector(".main"), {
 				devices: a,
 				callService: b
