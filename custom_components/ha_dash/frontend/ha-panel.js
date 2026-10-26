@@ -110,21 +110,38 @@ var r = ":host{--bg:#08080a;--panel:#141416;--panel-2:#17171a;--card-top:#222226
 		demo: !0
 	},
 	{
+		id: "climate.shi_zi_si_men_bing_xiang_leng_cang_qu",
+		name: "冰箱",
+		room: "厨房",
+		art: "fridge",
+		cat: "appliance",
+		dom: "climate",
+		sub: [
+			"climate.shi_zi_si_men_bing_xiang_leng_dong_qu",
+			"climate.shi_zi_si_men_bing_xiang_zuo_bian_wen_qu",
+			"climate.shi_zi_si_men_bing_xiang_you_bian_wen_qu",
+			"switch.shi_zi_si_men_bing_xiang_zhi_neng_mo_shi",
+			"switch.shi_zi_si_men_bing_xiang_jie_neng_mo_shi",
+			"switch.shi_zi_si_men_bing_xiang_jia_ri_mo_shi",
+			"switch.shi_zi_si_men_bing_xiang_ji_su_leng_dong_mo_shi",
+			"switch.shi_zi_si_men_bing_xiang_wei_jing_bao_xian",
+			"switch.shi_zi_si_men_bing_xiang_bao_shi_mo_shi",
+			"switch.shi_zi_si_men_bing_xiang_bao_xian_mo_shi",
+			"switch.shi_zi_si_men_bing_xiang_dian_zi_chu_wei",
+			"switch.shi_zi_si_men_bing_xiang_cuo_feng_yong_dian",
+			"binary_sensor.shi_zi_si_men_bing_xiang_leng_cang_men_zhuang_tai",
+			"binary_sensor.shi_zi_si_men_bing_xiang_leng_dong_men_zhuang_tai",
+			"binary_sensor.shi_zi_si_men_bing_xiang_bian_wen_qu_men_zhuang_tai",
+			"binary_sensor.shi_zi_si_men_bing_xiang_shi_fou_cuo_wu"
+		]
+	},
+	{
 		id: "light.demo_ceiling",
 		name: "筒灯",
 		room: "客厅",
 		art: "downlight",
 		cat: "lights",
 		dom: "light",
-		demo: !0
-	},
-	{
-		id: "switch.demo_fridge",
-		name: "冰箱",
-		room: "厨房",
-		art: "fridge",
-		cat: "appliance",
-		dom: "switch",
 		demo: !0
 	},
 	{
@@ -580,7 +597,7 @@ async function pe() {
 	if (P) F();
 	else {
 		if (!N) {
-			let { FloorHome: e } = await import("./chunk-DESqyTTG.js");
+			let { FloorHome: e } = await import("./chunk-DvyBFM7s.js");
 			N = new e(f.querySelector(".main"), {
 				devices: a,
 				callService: b
