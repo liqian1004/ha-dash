@@ -1,16 +1,14 @@
 /**
  * 永不变的入口（stable entry）
  *
- * HA 给 /local/ 下的文件发的是 `Cache-Control: public, max-age=2678400`（31 天），
- * 所以同一个 URL 改了内容，浏览器也不会重新下载 —— 这就是每次都得改 ?v= 的原因。
+ * HA 的 panel_custom 用 <script type="module"> + onload 来加载本文件。
+ * 之前这里写「顶层 await + 动态 import」本想给 ha-panel.js 加时间戳绕过 31 天缓存，
+ * 但顶层 await 会让 onload 在 ha-dash 元素注册前就触发，HA 于是创建出
+ * 未升级的普通元素，hass 注不进去 → 面板 states 一直为空 → 所有设备显示「离线」。
  *
- * 这个文件只是三行胶水：它自己地址固定（内容也永远不用再改），
- * 真正加载的 ha-panel.js 每次都带一个时间戳，等于强制走网络拿最新版。
- *
- * module_url 写 /local/ha-panel-loader.js 即可，以后发布新版本什么都不用改，
- * 用户刷新页面就是新版（不需要重启 HA）。
+ * 所以改成静态 import：ha-panel.js 会在本文件执行前就同步加载完，
+ * 保证 onload 触发时 ha-dash 已经注册好。代价是 ha-panel.js 不再带时间戳，
+ * 会被 /local/ 的 31 天强缓存；更新后若没生效，浏览器强刷（Ctrl+F5）即可。
  */
-const base = new URL('.', import.meta.url);
-
-// 用顶层 await：加载失败时会 reject，调用方（宿主页 / HA）能拿到错误，而不是静默白屏
-await import(`${base}ha-panel.js?t=${Date.now()}`);
+import './ha-panel.js';
+export * from './ha-panel.js';
