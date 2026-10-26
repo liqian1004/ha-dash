@@ -13,9 +13,10 @@
   }
   ha-dash { display: block; height: 100% }
 
-  /* 只有这个悬浮按钮是宿主页的，其余全是面板自己的 Shadow DOM */
+  /* 只有这个悬浮按钮是宿主页的，其余全是面板自己的 Shadow DOM。
+     放右下角：右上角会和面板顶栏的「居中 / ⋯」按钮重合 */
   .gear {
-    position: fixed; top: 14px; right: 14px; z-index: 99;
+    position: fixed; bottom: 14px; right: 14px; z-index: 99;
     width: 34px; height: 34px; border-radius: 50%; padding: 0;
     display: grid; place-items: center; cursor: pointer;
     background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.10); color: #a1a1aa;
