@@ -1025,7 +1025,11 @@ function Ae(e) {
 }
 var je = class extends HTMLElement {
 	connectedCallback() {
-		this._mounted || this._mount(), this._onResize = this._onResize || (() => Ae(this)), window.addEventListener("resize", this._onResize), this._onResize(), this._fitTimer = setTimeout(this._onResize, 150);
+		let e = Object.prototype.hasOwnProperty.call(this, "hass") ? this.hass : null;
+		if (this._mounted || this._mount(), e) try {
+			delete this.hass, this.hass = e;
+		} catch {}
+		this._onResize = this._onResize || (() => Ae(this)), window.addEventListener("resize", this._onResize), this._onResize(), this._fitTimer = setTimeout(this._onResize, 150);
 	}
 	disconnectedCallback() {
 		window.removeEventListener("resize", this._onResize), clearTimeout(this._fitTimer), clearInterval(this._clock);
