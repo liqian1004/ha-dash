@@ -110,16 +110,31 @@ function showMask (title, desc, opts = {}) {
 function hideMask () { mask.classList.add('hide') }
 
 /* ── 1. 加载面板 ──────────────────────────────────────────────── */
-// 统一走恒定入口 loader：它会给 ha-panel.js 带时间戳，所以本页 URL 不需要 ?v=
-// 万一 loader 没部署（老版本只有 ha-panel.js），退回直接加载
+/*
+ * 必须给 ha-panel.js 带时间戳导入。
+ *
+ * HA 给 /local/ 下的静态文件发的头是 `Cache-Control: public, max-age=2678400`（31 天），
+ * 浏览器在有效期内**根本不会发请求**，所以恒定 URL 的模块永远拿不到新代码。
+ * 症状有两种：
+ *   1. 改了代码、刷新没变化（用的还是缓存里的旧 js）；
+ *   2. 旧 js 里引用的 chunk-xxxx.js 已在重新构建时删除 → 动态 import 404 → 「3D 场景加载失败」。
+ *
+ * 本页是独立宿主页，不走 panel_custom 的 onload 时序，动态 import 完全安全，
+ * 所以直接用 `?t=时间戳` 让每次加载都是新 URL。
+ * 注意：本文件自身也会被缓存 31 天，但它的内容以后不需要再改——只要这份带时间戳的
+ * 逻辑被执行过一次，之后每次打开都会自然拿到最新的 ha-panel.js。
+ */
+const BOOT_TS = Date.now()
 try {
-  await import('./ha-panel-loader.js')
-} catch (e1) {
+  await import('./ha-panel.js?t=' + BOOT_TS)
+} catch (e2) {
   const ver = new URLSearchParams(location.search).get('v')
-  try {
-    await import('./ha-panel.js' + (ver ? '?v=' + ver : ''))
-  } catch (e2) {
-    showMask('面板加载失败', '模块没有加载起来，检查 <code>ha-panel.html</code>、<code>ha-panel-loader.js</code> 和 <code>ha-panel.js</code> 是否在同一个目录。',
+  let loaded = false
+  if (ver) {
+    try { await import('./ha-panel.js?v=' + ver); loaded = true } catch (e3) { loaded = false }
+  }
+  if (!loaded) {
+    showMask('面板加载失败', '模块没有加载起来，检查 <code>ha-panel.html</code> 和 <code>ha-panel.js</code> 是否在同一个目录。',
       { token: false, error: String((e2 && e2.message) || e2) })
     throw e2
   }
