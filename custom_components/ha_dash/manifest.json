@@ -1,7 +1,7 @@
 {
   "domain": "ha_dash",
   "name": "HA Dash",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "documentation": "https://github.com/liqian1004/ha-dash",
   "issue_tracker": "https://github.com/liqian1004/ha-dash/issues",
   "codeowners": [
