@@ -657,7 +657,7 @@ async function _e() {
 	if (R) z();
 	else {
 		if (!L) {
-			let { FloorHome: e } = await import("./chunk-DMMWpjU_.js");
+			let { FloorHome: e } = await import("./chunk-WIVKtQ9w.js");
 			L = new e(f.querySelector(".main"), {
 				devices: a,
 				callService: E
