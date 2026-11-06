@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>House Control</title>
+<style>
+  :root { color-scheme: dark }
+  html, body {
+    margin: 0; height: 100%;
+    background: #0a0e1a; color: #f3f5fa;
+    font: 400 14px/1.5 -apple-system, "SF Pro Text", "Inter", system-ui, "PingFang SC", "Microsoft YaHei", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  ha-dash-hc { display: block; height: 100% }
+
+  /* 连接令牌遮罩（宿主页负责，与面板自己的 Shadow DOM 分离） */
+  .mask {
+    position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 24px;
+    background: radial-gradient(ellipse at 50% 0%, rgba(61,139,255,.08), transparent 60%), #0a0e1a;
+  }
+  .mask.hide { display: none }
+  .card {
+    width: 100%; max-width: 420px; padding: 26px; border-radius: 22px;
+    background: linear-gradient(160deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+    border: 1px solid rgba(255,255,255,.1);
+    backdrop-filter: blur(20px);
+  }
+  .card h1 { margin: 0 0 8px; font-size: 17px; font-weight: 650 }
+  .card p { margin: 0 0 16px; color: rgba(222,230,247,.6); font-size: 12.5px; line-height: 1.75 }
+  .card input {
+    width: 100%; box-sizing: border-box; padding: 11px 13px; border-radius: 12px;
+    background: rgba(0,0,0,.3); border: 1px solid rgba(255,255,255,.12);
+    color: #f3f5fa; font: inherit; font-size: 13px; outline: 0;
+  }
+  .card input:focus { border-color: rgba(61,139,255,.6) }
+  .card button {
+    margin-top: 12px; width: 100%; padding: 11px; border-radius: 12px; cursor: pointer; font: inherit;
+    background: linear-gradient(180deg,#5aa2ff,#2f7bf2); border: 0; color: #fff; font-weight: 600;
+  }
+  .card button:disabled { opacity: .5; cursor: default }
+  .err { margin-top: 12px; color: #f87171; font-size: 12px; min-height: 1.1em }
+  .spin { display: inline-block; width: 13px; height: 13px; margin-right: 7px; vertical-align: -2px;
+    border: 2px solid rgba(255,255,255,.18); border-top-color: #5aa2ff; border-radius: 50%;
+    animation: spin .8s linear infinite }
+  @keyframes spin { to { transform: rotate(360deg) } }
+</style>
+</head>
+<body>
+
+<ha-dash-hc id="dash"></ha-dash-hc>
+
+<div class="mask" id="mask">
+  <div class="card">
+    <h1 id="m-title">连接到 Home Assistant</h1>
+    <p id="m-desc">粘贴一个长期访问令牌（个人资料 → 安全 → 长期访问令牌）。它只存在这台设备的浏览器里。</p>
+    <input id="tok" type="password" placeholder="长期访问令牌" autocomplete="off" spellcheck="false">
+    <button id="go">连接</button>
+    <div class="err" id="err"></div>
+  </div>
+</div>
+
+<script type="module">
+/**
+ * House Control 独立页面宿主（仿 ha-panel.html，但不进 HA 侧边栏）
+ *
+ * 做两件事：
+ *   1. 加载 hc-main.js，注册 <ha-dash-hc> 自定义元素
+ *   2. 自己连 HA WebSocket，拼最小 hass（states + callService + callWS）
+ */
+const STORE = 'ha-dash-cfg'   // 与 ha-panel.html 共用，填过一次就不用再填
+
+const $ = (id) => document.getElementById(id)
+const mask = $('mask'), errBox = $('err'), tokInput = $('tok'), goBtn = $('go')
+
+function loadCfg () {
+  try { return JSON.parse(localStorage.getItem(STORE) || '{}') } catch { return {} }
+}
+function saveCfg (patch) {
+  try { localStorage.setItem(STORE, JSON.stringify({ ...loadCfg(), ...patch })) } catch {}
+}
+
+function showMask (title, desc, opts = {}) {
+  $('m-title').textContent = title
+  $('m-desc').innerHTML = desc
+  tokInput.style.display = opts.token === false ? 'none' : ''
+  goBtn.style.display = opts.token === false ? 'none' : ''
+  goBtn.disabled = false
+  mask.classList.remove('hide')
+  errBox.textContent = opts.error || ''
+}
+function hideMask () { mask.classList.add('hide') }
+
+/* ── 1. 加载面板 ──────────────────────────────────────────────── */
+const BOOT_TS = Date.now()
+try {
+  await import('./hc-main.js?t=' + BOOT_TS)
+} catch (e2) {
+  const ver = new URLSearchParams(location.search).get('v')
+  let loaded = false
+  if (ver) {
+    try { await import('./hc-main.js?v=' + ver); loaded = true } catch (e3) { loaded = false }
+  }
+  if (!loaded) {
+    showMask('面板加载失败', '模块没有加载起来，检查 <code>house-control.html</code> 和 <code>hc-main.js</code> 是否在同一个目录。',
+      { token: false, error: String((e2 && e2.message) || e2) })
+    throw e2
+  }
+}
+if (!customElements.get('ha-dash-hc')) {
+  showMask('面板未注册', 'hc-main.js 加载了，但没有注册 <code>ha-dash-hc</code> 元素。', { token: false })
+  throw new Error('ha-dash-hc not defined')
+}
+
+const el = $('dash')
+
+/* ── 2. 最小 hass ─────────────────────────────────────────────── */
+let states = {}
+let ws = null
+let msgId = 0
+const pending = new Map()
+
+function callService (domain, service, serviceData = {}, target = {}) {
+  return send({ type: 'call_service', domain, service, service_data: serviceData, target })
+}
+
+function push () { el.hass = { states, callService, callWS: send } }
+
+/* ── 3. WebSocket 协议（手写，不引依赖）──────────────────────── */
+function send (msg) {
+  return new Promise((ok, fail) => {
+    if (!ws || ws.readyState !== WebSocket.OPEN) return fail(new Error('未连接'))
+    const id = ++msgId
+    pending.set(id, { ok, fail })
+    ws.send(JSON.stringify({ id, ...msg }))
+  })
+}
+
+let retryTimer = null
+function connect () {
+  const proto = location.protocol === 'https:' ? 'wss' : 'ws'
+  ws = new WebSocket(proto + '://' + location.host + '/api/websocket')
+
+  ws.onmessage = (ev) => {
+    let m
+    try { m = JSON.parse(ev.data) } catch { return }
+
+    if (m.type === 'auth_required') {
+      const token = loadCfg().token || ''
+      if (!token) { showMask('连接到 Home Assistant', $('m-desc').innerHTML); ws.close(); return }
+      ws.send(JSON.stringify({ type: 'auth', access_token: token }))
+      return
+    }
+
+    if (m.type === 'auth_invalid') {
+      showMask('令牌无效或已过期',
+        '到 HA 的「个人资料 → 安全 → 长期访问令牌」重新生成一个，粘进来即可。',
+        { error: 'HA 拒绝了这个令牌：' + (m.message || 'auth_invalid') })
+      ws.close()
+      return
+    }
+
+    if (m.type === 'auth_ok') {
+      hideMask()
+      boot()
+      return
+    }
+
+    if (m.type === 'result') {
+      const p = pending.get(m.id)
+      pending.delete(m.id)
+      if (!p) return
+      m.success ? p.ok(m.result) : p.fail(Object.assign(new Error(m.error?.message || 'call failed'), m.error))
+      return
+    }
+
+    if (m.type === 'event' && m.event?.event_type === 'state_changed') {
+      const { entity_id: id, new_state: ns } = m.event.data || {}
+      if (!id) return
+      states = { ...states }
+      if (ns) states[id] = ns
+      else delete states[id]
+      push()
+    }
+  }
+
+  ws.onerror = () => {}
+  ws.onclose = () => {
+    if (!loadCfg().token) return
+    showMask('连接已断开', '<span class="spin"></span>正在自动重连…', { token: false })
+    clearTimeout(retryTimer)
+    retryTimer = setTimeout(connect, 3000)
+  }
+}
+
+async function boot () {
+  try {
+    const list = await send({ type: 'get_states' })
+    states = Object.fromEntries(list.map((s) => [s.entity_id, s]))
+    push()
+  } catch (e) {
+    showMask('读取实体失败', '连上了但拿不到实体列表，检查 HA 是否还在启动中。', { token: false, error: String(e.message || e) })
+    return
+  }
+  send({ type: 'subscribe_events', event_type: 'state_changed' }).catch(() => {})
+}
+
+/* ── 4. 交互 ──────────────────────────────────────────────────── */
+goBtn.onclick = () => {
+  const t = tokInput.value.trim()
+  if (!t) { errBox.textContent = '先把令牌粘进来'; return }
+  saveCfg({ token: t })
+  goBtn.disabled = true
+  errBox.innerHTML = '<span class="spin"></span>正在连接…'
+  location.reload()
+}
+
+tokInput.onkeydown = (e) => { if (e.key === 'Enter') goBtn.click() }
+
+/* ── 启动 ─────────────────────────────────────────────────────── */
+push()
+if (loadCfg().token) {
+  showMask('正在连接', '<span class="spin"></span>握手与同步实体…', { token: false })
+  connect()
+} else {
+  showMask('连接到 Home Assistant',
+    '第一次使用，需要一个长期访问令牌：HA 右上角头像 → 个人资料 → 安全 → 长期访问令牌 → 创建。',
+    {})
+}
+</script>
+</body>
+</html>
