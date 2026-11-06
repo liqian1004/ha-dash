@@ -13,8 +13,8 @@ var t = ":host{--bg:#0b0e16;--bg-list:#0c1019;--text:#f2f5fb;--muted:#dce5f68f;-
 	floor: (e, t) => n(e, t, "0 0 24 24", "<path d=\"M12 2v6\"/><path d=\"M12 8a4 4 0 0 0-4 4v2h8v-2a4 4 0 0 0-4-4z\"/><path d=\"M8 16h8M6 20h12\"/><path d=\"M12 20v-4\"/>"),
 	table: (e, t) => n(e, t, "0 0 24 24", "<path d=\"M12 8v8\"/><path d=\"M5 8h14\"/><path d=\"M8 8V4h8v4\"/><path d=\"M8 16h8v4H8z\"/>"),
 	strip: (e, t) => n(e, t, "0 0 24 24", "<path d=\"M4 18v-2a8 8 0 0 1 16 0v2\"/><path d=\"M8 18v1M12 18v1M16 18v1\"/>"),
-	cool: (e, t) => n(e, t, "0 0 24 24", "<path d=\"M12 2v20M12 6l-4-4M12 6l4-4M12 22l-4 4M12 22l4 4M2 12h20M6 12l-4-4M6 12l-4 4M22 12l4-4M22 12l4 4\"/>"),
-	heat: (e, t) => n(e, t, "0 0 24 24", "<path d=\"M12 22c3-2 6-4 6-8a6 6 0 0 0-12 0c0 2 1 3.5 2 5-1-1-2-2.5-2-4\"/>"),
+	cool: (e, t) => n(e, t, "0 0 24 24", "<path d=\"M12 2v20M3.3 7.2l17.4 9.6M20.7 7.2L3.3 16.8\"/><path d=\"M12 6.2 9.4 3.6M12 6.2l2.6-2.6M12 17.8l-2.6 2.6M12 17.8l2.6 2.6M6.1 9.9 2.5 9.3M6.1 9.9 5.5 6.3M17.9 14.1l3.6.6M17.9 14.1l.6 3.6M6.1 14.1l-3.6.6M6.1 14.1l-.6 3.6M17.9 9.9l3.6-.6M17.9 9.9l.6-3.6\"/>"),
+	heat: (e, t) => n(e, t, "0 0 24 24", "<path d=\"M12 2.6s5.6 4.9 5.6 9.7a5.6 5.6 0 0 1-11.2 0c0-2 1-3.7 2.4-5.1.2 1.5.9 2.4 2 2.8-.3-2.6.5-5.1 1.2-7.4z\"/>"),
 	dry: (e, t) => n(e, t, "0 0 24 24", "<path d=\"M12 2.7c-2 3-4 5-4 8a4 4 0 0 0 8 0c0-3-2-5-4-8z\"/><path d=\"M6 15a6 6 0 0 0 12 0c0-2-1-3-2-4\"/>"),
 	fan: (e, t) => n(e, t, "0 0 24 24", "<path d=\"M12 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0-6 0\"/><path d=\"M12 9a10 10 0 0 1 7-3M12 15a10 10 0 0 0 7 3M9 12a10 10 0 0 1-3-7M15 12a10 10 0 0 0-3 7\"/>"),
 	auto: (e, t) => n(e, t, "0 0 24 24", "<path d=\"M3 12a9 9 0 0 1 9-9 9 9 0 0 1 6.4 2.6L21 8\"/><path d=\"M21 3v5h-5\"/><path d=\"M21 12a9 9 0 0 1-9 9 9 9 0 0 1-6.4-2.6L3 16\"/><path d=\"M3 21v-5h5\"/>"),
@@ -1845,7 +1845,25 @@ var T = {
 					d.textContent = `${e}K`;
 				},
 				onInput: (t) => this._call("light", "turn_on", e.id, { color_temp_kelvin: t })
-			}), s.appendChild(u.el);
+			});
+			let a = () => {
+				let t = this._st(e.id).attributes || {};
+				return t.color_temp_kelvin ?? (t.color_temp == null ? Math.round((r + i) / 2) : Math.round(1e6 / t.color_temp));
+			}, o = (t) => () => {
+				let n = Math.max(r, Math.min(i, a() + t));
+				this._call("light", "turn_on", e.id, { color_temp_kelvin: n });
+			};
+			s.appendChild(this._el("div", "slider-row", this._el("button", "round", {
+				"aria-label": "色温调暖",
+				title: "更暖",
+				style: { color: "#ffb45e" },
+				onclick: o(-300)
+			}, this._ic("heat", 19)), u.el, this._el("button", "round", {
+				"aria-label": "色温调冷",
+				title: "更冷",
+				style: { color: "#7fc0ff" },
+				onclick: o(300)
+			}, this._ic("cool", 19))));
 		}
 		let f = null, h = null, g = null;
 		if (c.includes("color")) {
